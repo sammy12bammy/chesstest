@@ -433,47 +433,206 @@ public class gameBoard {
             return null;        
    }
 
-   private boolean kingIsChecked(String kingColor){
-        String curPiece;
-        int row;
-        int col;    
-
-        for(int i = 0; i < game.length; i++){
-            for(int j = 0; j < game[i].length; j++){
-                curPiece = game[i][j];
-                row = i;
-                col = j;
-                if(!curPiece.equals("--")){
-                    
-                }
-                
-            }
-        }
-    }
     //checkPieceKG is a method for kingIsChecked. This checks the piece picked out from the orignal function.
     private boolean checkPieceKG(String kingColor, int row, int col){
         String curPieceColor = getPieceColor(row,col);
+        String piece = getPiece(Integer.toString(row) + Integer.toString(col));
 
         if(curPieceColor.equals(kingColor)){
             return false;
         }
 
-        if(checkPawnCheck(row,col)){
-            return true;
+        if(piece.equals("Pawn")){
+            return checkPawnCheck(curPieceColor, row, col);
         }
-        if(checkKnightCheck(row,col)){
-            return true;
+        if(piece.equals("Knight")){
+            return checkKnightCheck(curPieceColor, row, col);
         }
-        if(checkBishopCheck(row,col)){
-            return true;
+        if(piece.equals("Bishop")){
+            return checkBishopCheck(curPieceColor, row, col);
         }
-        if(checkRookCheck(row,col)){
-            return true;
+        if(piece.equals("Rook")){
+            return checkRookCheck(curPieceColor, row, col);
         }
-        if(checkQueenCheck(row,col)){
-            return true;
+        if(piece.equals("Queen")){
+            return checkQueenCheck(curPieceColor, row, col);
         }
 
         return false;
     }
+
+    private boolean checkPawnCheck(String color, int row, int col){
+        if(color.equals("white")){
+            if(game[row-1][col+1].equals("bK")){
+                return true;
+            } else if(game[row-1][col-1].equals("bK")){
+                return true;
+            }
+        } else {
+            if(game[row+1][col+1].equals("wK")){
+                return true;
+            } else if(game[row+1][col-1].equals("wK")){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkKnightCheck(String color, int row, int col){
+        if(color.equals("white")){
+            if(game[row-2][col+1].equals("bK")){
+                return true;
+            }
+            if(game[row-2][col-1].equals("bK")){
+                return true;
+            }
+            if(game[row+2][col+1].equals("bK")){
+                return true;
+            }
+            if(game[row+2][col-1].equals("bK")){
+                return true;
+            }
+            if(game[row+1][col+2].equals("bK")){
+                return true;
+            }
+            if(game[row-1][col+2].equals("bK")){
+                return true;
+            }
+            if(game[row+1][col-2].equals("bK")){
+                return true;
+            }
+            if(game[row-1][col-2].equals("bK")){
+                return true;
+            }
+        } else {
+            if(game[row-2][col+1].equals("wK")){
+                return true;
+            }
+            if(game[row-2][col-1].equals("wK")){
+                return true;
+            }
+            if(game[row+2][col+1].equals("wK")){
+                return true;
+            }
+            if(game[row+2][col-1].equals("wK")){
+                return true;
+            }
+            if(game[row+1][col+2].equals("wK")){
+                return true;
+            }
+            if(game[row-1][col+2].equals("wK")){
+                return true;
+            }
+            if(game[row+1][col-2].equals("wK")){
+                return true;
+            }
+            if(game[row-1][col-2].equals("wK")){
+                return true;
+            }
+        }   
+        return false;        
+    }
+
+    private boolean checkBishopCheck(String color, int row, int col){
+        int rowCount;
+        int colCount;
+        
+        if(color.equals("white")){
+            //goes until it reaches a piece of same color
+            //up right
+            //row -  col + 
+            rowCount = row - 1;
+            colCount = col + 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                rowCount--;
+                colCount++;
+            }
+            //bottom right
+            //row + col +1
+            rowCount = row + 1;
+            colCount = col + 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                rowCount++;
+                colCount++;
+            }
+            //bottom left
+            //row + col -
+            rowCount = row + 1;
+            colCount = col - 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                rowCount++;
+                colCount--;
+            }
+            //Top Left
+            //row - col -
+            rowCount = row - 1;
+            colCount = col - 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                rowCount--;
+                colCount--;
+            }
+
+        } else {
+            //up right
+            //row -  col + 
+            rowCount = row - 1;
+            colCount = col + 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                rowCount--;
+                colCount++;
+            }
+            //bottom right
+            //row + col +1
+            rowCount = row + 1;
+            colCount = col + 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                rowCount++;
+                colCount++;
+            }
+            //bottom left
+            //row + col -
+            rowCount = row + 1;
+            colCount = col - 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                rowCount++;
+                colCount--;
+            }
+            //Top Left
+            //row - col -
+            rowCount = row - 1;
+            colCount = col - 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                rowCount--;
+                colCount--;
+            }
+        }
+
+        return false;
+    }
+
 }
