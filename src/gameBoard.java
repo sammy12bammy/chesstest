@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class gameBoard {
+
     private String[][] game = new String[8][8];
     private int turn;
     private boolean madeMove;
@@ -349,6 +350,8 @@ public class gameBoard {
     }
 
     private boolean checkRow(int srow, int scol, int erow, int ecol){
+            @SuppressWarnings("unused")
+
             int counter;
             final int UP = 0;
             final int RIGHT = 1;
@@ -544,7 +547,7 @@ public class gameBoard {
             //row -  col + 
             rowCount = row - 1;
             colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
                 if(game[rowCount][colCount].equals("bK")){
                     return true;
                 }
@@ -555,7 +558,7 @@ public class gameBoard {
             //row + col +1
             rowCount = row + 1;
             colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
                 if(game[rowCount][colCount].equals("bK")){
                     return true;
                 }
@@ -566,7 +569,7 @@ public class gameBoard {
             //row + col -
             rowCount = row + 1;
             colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
                 if(game[rowCount][colCount].equals("bK")){
                     return true;
                 }
@@ -577,7 +580,7 @@ public class gameBoard {
             //row - col -
             rowCount = row - 1;
             colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
                 if(game[rowCount][colCount].equals("bK")){
                     return true;
                 }
@@ -590,7 +593,7 @@ public class gameBoard {
             //row -  col + 
             rowCount = row - 1;
             colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
                 if(game[rowCount][colCount].equals("wK")){
                     return true;
                 }
@@ -601,7 +604,7 @@ public class gameBoard {
             //row + col +1
             rowCount = row + 1;
             colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
                 if(game[rowCount][colCount].equals("wK")){
                     return true;
                 }
@@ -612,7 +615,7 @@ public class gameBoard {
             //row + col -
             rowCount = row + 1;
             colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
                 if(game[rowCount][colCount].equals("wK")){
                     return true;
                 }
@@ -623,7 +626,7 @@ public class gameBoard {
             //row - col -
             rowCount = row - 1;
             colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--")){
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
                 if(game[rowCount][colCount].equals("wK")){
                     return true;
                 }
@@ -632,6 +635,99 @@ public class gameBoard {
             }
         }
 
+        return false;
+    }
+
+    private boolean checkRookCheck(String color, int row, int col){
+        int rowCount;
+        int colCount;
+        
+        if(color.equals("white")){
+            //up
+            rowCount = row - 1;
+            colCount = col;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                rowCount--;
+            }
+            //down
+            rowCount = row + 1;
+            colCount = col;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                rowCount++;
+            }
+            //right
+            rowCount = row;
+            colCount = col + 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                colCount++;
+            }
+            //left
+            rowCount = row;
+            colCount = col - 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("bK")){
+                if(game[rowCount][colCount].equals("bK")){
+                    return true;
+                }
+                colCount--;
+            }
+        } else {
+            //up
+            rowCount = row - 1;
+            colCount = col;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                rowCount--;
+            }
+            //down
+            rowCount = row + 1;
+            colCount = col;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                rowCount++;
+            }
+            //right
+            rowCount = row;
+            colCount = col + 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                colCount++;
+            }
+            //left
+            rowCount = row;
+            colCount = col - 1;
+            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].equals("--") || game[rowCount][colCount].equals("wK")){
+                if(game[rowCount][colCount].equals("wK")){
+                    return true;
+                }
+                colCount--;
+            }
+        }
+        
+        return false;
+    }
+
+    private boolean checkQueenCheck(String color, int row, int col){
+        if(checkBishopCheck(color, row, col)){
+            return true;
+        }
+        if(checkRookCheck(color, row, col)){
+            return true;
+        }
         return false;
     }
 
