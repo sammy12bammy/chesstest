@@ -5,6 +5,7 @@ public class gameBoard {
     private String[][] game = new String[8][8];
     private int turn;
     private boolean madeMove;
+    private boolean kingBeingMove = false;
     private ArrayList<String> capturedPieces = new ArrayList<String>();
 
     public gameBoard(){
@@ -116,7 +117,11 @@ public class gameBoard {
 
         if(isValidMove(piece, startRow, startCol, endRow, endCol)){
             if(turn % 2 == 0 && pieceColor.equals("white")){      
-                moveMakingExecution(startRow, startCol, endRow, endCol);
+                if(checkPieceKG("white", startRow, startCol) && !kingBeingMove){
+                    makeKingMove("white", startRow, startCol, endRow, endCol);
+                } else{
+                    moveMakingExecution(startRow, startCol, endRow, endCol);
+                }         
             }
             if(turn % 2 == 1 && pieceColor.equals("black")){      
                 moveMakingExecution(startRow, startCol, endRow, endCol);
@@ -729,6 +734,51 @@ public class gameBoard {
             return true;
         }
         return false;
+    }
+
+    private void makeKingMove(String color, int srow, int scol, int erow, int ecol){
+        kingBeingMove = true;
+        //find king position
+        //check if the srow match
+        //run makeMove if matches
+        int kingRow;
+        int kingCol;
+        if(color.equals("white")){
+            for(int i = 0; i < game.length; i++){
+                for(int j = 0; i < game[j].length; j++){
+                    if(game[i][j].equals("wK")){
+                        kingRow = i;
+                        kingCol = j;
+                        break;
+                    }
+                }
+            }
+            kingRow = 9;
+            kingCol = 9;
+        } else {
+            for(int i = 0; i < game.length; i++){
+                for(int j = 0; i < game[j].length; j++){
+                    if(game[i][j].equals("bK")){
+                        kingRow = i;
+                        kingCol = j;
+                        break;
+                    }
+                }
+            }
+            kingRow = 9;
+            kingCol = 9;
+        }
+        
+        
+        if(srow == kingRow && scol == kingCol){
+            String start = getPiece(Integer.toString(srow) + Integer.toString(scol));
+            String end = getPiece(Integer.toString(erow) + Integer.toString(ecol));
+            makeMove(start, end);
+        }
+
+        kingBeingMove = false;
+            
+
     }
 
 }
