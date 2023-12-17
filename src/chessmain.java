@@ -7,7 +7,7 @@ public class chessmain {
 
         game.printGame();
 
-        while(true){
+        while(!game.getEndGame()){
             String start;
             String end;
 

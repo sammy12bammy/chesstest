@@ -33,12 +33,12 @@ e4 to e5
 *input format rol,col eg 45
 
 THINGS TO DO
-1.Make pieces
-2.Make peice movement logically
-3.Make turn and use turn var
-4.Make moves not be able to pass over pieces
-5.Captures
-6.Checks
+1.Make pieces ✔
+2.Make peice movement logically ✔
+3.Make turn and use turn var ✔
+4.Make moves not be able to pass over pieces ✔
+5.Captures ✔
+6.Checks ✔
 7.Deteremine winner
 8.Special moves
 

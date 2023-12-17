@@ -6,6 +6,7 @@ public class gameBoard {
     private int turn;
     private boolean madeMove;
     private boolean kingBeingMove = false;
+    private boolean endGame = false;
     private ArrayList<String> capturedPieces = new ArrayList<String>();
 
     public gameBoard(){
@@ -23,6 +24,10 @@ public class gameBoard {
 
             turn = 0;
     }
+
+        public boolean getEndGame(){
+            return endGame;
+        }
 
         public int getTurn(){
             return turn;
@@ -127,7 +132,11 @@ public class gameBoard {
                 moveMakingExecution(startRow, startCol, endRow, endCol);
             }
         } else {
-            System.out.println("Not valid move");
+            if(kingBeingMove){
+                checkMate(pieceColor);
+            } else{
+                System.out.println("Not valid move");
+            }
         }
         
     }
@@ -774,11 +783,19 @@ public class gameBoard {
             String start = getPiece(Integer.toString(srow) + Integer.toString(scol));
             String end = getPiece(Integer.toString(erow) + Integer.toString(ecol));
             makeMove(start, end);
+
         }
 
         kingBeingMove = false;
             
 
+    }
+
+    public void checkMate(String color){
+        if(color.equals("white")){
+            System.out.println("Black has won");
+            endGame = true;
+        }
     }
 
 }
