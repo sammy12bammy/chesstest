@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class gameBoard {
 
-    private String[][] game = new String[8][8];
+    private Piece[][] game = new Piece[8][8];
     private int turn;
     private boolean madeMove;
     private boolean kingBeingMove = false;
@@ -15,9 +15,9 @@ public class gameBoard {
         
         for(int i = 0; i < game.length; i++){
             for(int j = 0; j < game.length; j++){
-                String cur = game[i][j];
+                Piece cur = game[i][j];
                 if(cur == null){
-                    game[i][j] = "--";
+                    game[i][j] = new Piece("--", "na", i, j);
                 }
             }
         }
@@ -37,7 +37,7 @@ public class gameBoard {
             return madeMove;
         }
         //for debug
-        public void changePiece(String endPiece, int row, int col){
+        public void changePiece(Piece endPiece, int row, int col){
             game[row][col] = endPiece;
         }
 
@@ -52,43 +52,45 @@ public class gameBoard {
             }
         }
 
-    private static void makePieces(String[][]arr, String color){
+    private static void makePieces(Piece[][]arr, String color){
         try{
             if(color.equals("white")){
-                arr[7][0] = "wR";
-                arr[7][1] = "wN";
-                arr[7][2] = "wB";
-                arr[7][3] = "wK";
-                arr[7][4] = "wQ";
-                arr[7][5] = "wB";
-                arr[7][6] = "wN";
-                arr[7][7] = "wR";
-                arr[6][0] = "wP";
-                arr[6][1] = "wP";
-                arr[6][2] = "wP";
-                arr[6][3] = "wP";
-                arr[6][4] = "wP";
-                arr[6][5] = "wP";
-                arr[6][6] = "wP";
-                arr[6][7] = "wP";
+                arr[7][0] = new Piece("rook", "white", 7, 0);
+                arr[7][1] = new Piece("knight", "white", 7, 1);
+                arr[7][2] = new Piece("bishop", "white", 7, 2);
+                arr[7][3] = new Piece("king", "white", 7, 3);
+                arr[7][4] = new Piece("queen", "white", 7, 4);
+                arr[7][5] = new Piece("bishop", "white", 7, 5);
+                arr[7][6] = new Piece("knight", "white", 7, 6);
+                arr[7][7] = new Piece("rook", "white", 7, 7);
+
+                arr[6][0] = new Piece("pawn", "white", 6, 0);
+                arr[6][1] = new Piece("pawn", "white", 6, 0);
+                arr[6][2] = new Piece("pawn", "white", 6, 0);
+                arr[6][3] = new Piece("pawn", "white", 6, 0);
+                arr[6][4] = new Piece("pawn", "white", 6, 0);
+                arr[6][5] = new Piece("pawn", "white", 6, 0);
+                arr[6][6] = new Piece("pawn", "white", 6, 0);
+                arr[6][7] = new Piece("pawn", "white", 6, 0);
             } 
             if(color.equals("black")){
-                arr[0][0] = "bR";
-                arr[0][1] = "bN";
-                arr[0][2] = "bB";
-                arr[0][3] = "bK";
-                arr[0][4] = "bQ";
-                arr[0][5] = "bB";
-                arr[0][6] = "bN";
-                arr[0][7] = "bR";
-                arr[1][0] = "bP";
-                arr[1][1] = "bP";
-                arr[1][2] = "bP";
-                arr[1][3] = "bP";
-                arr[1][4] = "bP";
-                arr[1][5] = "bP";
-                arr[1][6] = "bP";
-                arr[1][7] = "bP";
+                arr[0][0] = new Piece("rook", "black", 0, 0);
+                arr[0][1] = new Piece("knight", "black", 0, 1);
+                arr[0][2] = new Piece("bishop", "black", 0, 2);
+                arr[0][3] = new Piece("king", "black", 0, 3);
+                arr[0][4] = new Piece("queen", "black", 0, 4);
+                arr[0][5] = new Piece("bishop", "black", 0, 5);
+                arr[0][6] = new Piece("knight", "black",0 , 6);
+                arr[0][7] = new Piece("rook", "black", 0, 7);
+
+                arr[1][0] = new Piece("pawn", "black", 1, 0);
+                arr[1][1] = new Piece("pawn", "black", 1, 1);
+                arr[1][2] = new Piece("pawn", "black", 1, 2);
+                arr[1][3] = new Piece("pawn", "black", 1, 3);
+                arr[1][4] = new Piece("pawn", "black", 1, 4);
+                arr[1][5] = new Piece("pawn", "black", 1, 5);
+                arr[1][6] = new Piece("pawn", "black", 1, 6);
+                arr[1][7] = new Piece("pawn", "black", 1, 7);
             }
         } catch(Exception e){
                 System.out.println("Error with piece generation");
@@ -96,15 +98,16 @@ public class gameBoard {
     }
     
     public void printGame(){
-        for(String[] row: game)
+        for(Piece[] row: game)
             {
-                for(String thing: row)
+                for(Piece thing: row)
                 {
-                    System.out.print(thing.substring(1,2) + "  ");
+                    System.out.print(thing + "  ");
                 }
                 System.out.println();
             }
     }
+     
     
     protected void makeMove(String start, String end){
             String piece = getPiece(start);
@@ -114,13 +117,13 @@ public class gameBoard {
             int endRow = Integer.parseInt(end.substring(0,1));
             int endCol = Integer.parseInt(end.substring(1,2));
 
-        String pieceColor = getPieceColor(startRow, startCol);
+        String pieceColor = game[startRow][startCol].getColor();
         madeMove = false;
 
         //check if valid then move
 
 
-        if(isValidMove(piece, startRow, startCol, endRow, endCol)){
+        if(isValidMove(game[startRow][startCol], endRow, endCol)){
             if(turn % 2 == 0 && pieceColor.equals("white")){      
                 if(checkPieceKG("white", startRow, startCol) && !kingBeingMove){
                     makeKingMove("white", startRow, startCol, endRow, endCol);
@@ -194,30 +197,32 @@ public class gameBoard {
         }
     }
 
-    private boolean isValidMove(String piece, int srow, int scol, int erow, int ecol){
-            String curPieceColor = getPieceColor(srow,scol);
-            String endSpotColor = getPieceColor(erow,ecol);
+    private boolean isValidMove(Piece piece, int erow, int ecol){
+            String curPieceColor = piece.getColor();
+            String endSpotColor = game[erow][ecol].getColor();
+            int srow = piece.getRow();
+            int scol = piece.getCol();
             //change this when castling
             if(curPieceColor.equals(endSpotColor)){
                 return false;
             }
 
             //pawn movement      
-            if(piece.equals("Pawn")){
+            if(piece.getType().equals("pawn")){
                 return pawnMoveLogic(srow, scol, erow, ecol);
             }
             //knight
-            if(piece.equals("Knight")){
+            if(piece.getType().equals("knight")){
                 return knightMoveLogic(srow, scol, erow, ecol);
             }
             //bishop
-            if(piece.equals("Bishop")){                                        
+            if(piece.getType().equals("bishop")){                                        
                 if(Math.abs(srow - erow) == Math.abs(scol - ecol) && checkDiag(srow,scol,erow,ecol)){
                     return true;
                 }           
             }
             //rook
-            if(piece.equals("Rook")){
+            if(piece.getType().equals("rook")){
                 if(srow == erow || scol == ecol){
                     if(checkRow(srow,scol,erow,ecol)){
                         return true;
@@ -225,7 +230,7 @@ public class gameBoard {
                 }           
             }
             //queen
-            if(piece.equals("Queen")){
+            if(piece.getType().equals("queen")){
                 if(Math.abs(srow - erow) == Math.abs(scol - ecol) && checkDiag(srow,scol,erow,ecol)){
                     return true;
                 } else if(srow == erow || scol == ecol){
@@ -235,7 +240,7 @@ public class gameBoard {
                 }
             }
             //king
-            if(piece.equals("King")){
+            if(piece.getType().equals("king")){
                 return kingMoveLogic(srow, scol, erow, ecol);
             }
 
@@ -797,5 +802,6 @@ public class gameBoard {
             endGame = true;
         }
     }
+    
 
 }

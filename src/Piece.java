@@ -10,6 +10,7 @@ public class Piece {
         this.row = row;
         this.col = col;
     }
+    //overload for a blank piece
 
     public int getRow(){
         return row;
@@ -41,5 +42,14 @@ public class Piece {
 
     public void setColor(String color){
         this.color = color;
+    }
+
+    public String toString(){
+        if(!type.equals("--")){
+            return color.substring(0,1) + type.toUpperCase().substring(0,1);
+        } else {
+            return "--";
+        }
+        
     }
 }
