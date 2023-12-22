@@ -36,7 +36,7 @@ public class gameBoard {
         public boolean getMoveBol(){
             return madeMove;
         }
-
+        //for debug
         public void changePiece(String endPiece, int row, int col){
             game[row][col] = endPiece;
         }
@@ -106,7 +106,7 @@ public class gameBoard {
             }
     }
     
-    public void makeMove(String start, String end){
+    protected void makeMove(String start, String end){
             String piece = getPiece(start);
 
             int startRow = Integer.parseInt(start.substring(0,1));
