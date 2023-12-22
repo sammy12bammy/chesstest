@@ -6,7 +6,7 @@ public class chessmain {
         Scanner in = new Scanner(System.in);
 
         game.printGame();
-/* 
+ 
         while(!game.getEndGame()){
             String start;
             String end;
@@ -28,7 +28,7 @@ public class chessmain {
             game.printCapturedPiece();
 
         }  
-        */     
+            
     }
 
     public static void clearScreen() {  

@@ -37,7 +37,12 @@ public class Piece {
     }
 
     public String getColor(){
-        return color;
+        if(color.equals("white") || color.equals("black")){
+            return color;
+        } else {
+            return null;
+        }
+        
     }
 
     public void setColor(String color){
