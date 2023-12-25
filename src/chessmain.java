@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import javax.swing.*;
 
 public class chessmain {
     public static void main(String[] args) throws Exception {
@@ -6,8 +7,18 @@ public class chessmain {
         Scanner in = new Scanner(System.in);
 
         game.printGame();
- 
-        while(!game.getEndGame()){
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run(){
+                Checkerboard board = new Checkerboard();
+                board.showBoard();
+            }
+        });
+        
+        
+        /*
+          while(!game.getEndGame()){
             String start;
             String end;
 
@@ -27,8 +38,10 @@ public class chessmain {
             game.printGame();
             game.printCapturedPiece();
 
-        }  
-            
+        }
+         */
+         
+           in.close(); 
     }
 
     public static void clearScreen() {  

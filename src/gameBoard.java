@@ -1,14 +1,20 @@
 import java.util.ArrayList;
 
 public class gameBoard {
-
+    //instance variabls for game board class
     private Piece[][] game = new Piece[8][8];
     private int turn;
     private boolean madeMove;
     private boolean kingBeingMove = false;
     private boolean endGame = false;
     private ArrayList<Piece> capturedPieces = new ArrayList<Piece>();
-
+    
+    /**
+     * Initializes a gameboard clas. This class holds all neccasary methods for chess
+     * PostCondition: Initzalizing pieces objects on 8x8 board and setting turn to 0 (Player white)
+     * 
+     * @param : no params
+     */
     public gameBoard(){
         makePieces(game, "white");
         makePieces(game, "black");
@@ -24,7 +30,7 @@ public class gameBoard {
 
             turn = 0;
     }
-
+//Getter and setter methods Methods
         public boolean getEndGame(){
             return endGame;
         }
@@ -40,8 +46,13 @@ public class gameBoard {
         public void changePiece(Piece endPiece, int row, int col){
             game[row][col] = endPiece;
         }
+//------------------------------------------------------------------------------------
 
-        public void printCapturedPiece(){
+    /** 
+     * Prints all captured pieces in capturedPieces array when called
+     * PreCondition: ArrayList capturedPieces must be initalized
+     */      
+    public void printCapturedPiece(){
             if(capturedPieces.size() == 0){
                 System.out.println("No captured pieces yet");
                 return;
@@ -51,7 +62,14 @@ public class gameBoard {
                 System.out.println(capturedPieces.get(i) + " ");
             }
         }
-
+        /**
+         * Initizalizes all pieces on games by creating new instances of Piece class and setting their params to match position, color, and type
+         * Precondition: game[][] arr must initalized, color must be initalized
+         * PostCondition: game[][] has pieces!!
+         * 
+         * @param arr
+         * @param color
+         */
     private static void makePieces(Piece[][]arr, String color){
         try{
             if(color.equals("white")){
@@ -96,7 +114,7 @@ public class gameBoard {
                 System.out.println("Error with piece generation");
         }
     }
-    
+    //prints out the game in the terminal
     public void printGame(){
         for(Piece[] row: game)
             {
@@ -107,7 +125,15 @@ public class gameBoard {
                 System.out.println();
             }
     }
-     
+    //-------------------------------------------------------------------------------------------------------------
+    /**
+     * Makes move methods that checks if the move is valid and if the king is checked. Captures piece before swapping 
+     * Precondition: must have game[][] and start and end must be passed through as parameters
+     * PostCondition: swaps and captures piece
+     * 
+     * @param start
+     * @param end
+     */ 
     
     protected void makeMove(String start, String end){
 
@@ -140,14 +166,23 @@ public class gameBoard {
         }
         
     }
-
+    //part of makeMove methods that executes after the move is valid and king does not have to move
     private void moveMakingExecution(int startRow, int startCol, int endRow, int endCol){
         capturePiece(startRow, startCol, endRow, endCol);
         game[endRow][endCol] = game[startRow][startCol];
         game[startRow][startCol] = new Piece("--", "na", startRow, startCol);
         turn++;
     }
-
+    /**
+     * Captures pieces and adds it to capturedPieces
+     * PreCondition: must be called through makeMove()
+     * PostCondition: pieces is removed and store in capturedPieces
+     * 
+     * @param srow
+     * @param scol
+     * @param erow
+     * @param ecol
+     */
     private void capturePiece(int srow, int scol, int erow, int ecol){      
         Piece curPiece = game[srow][erow];
         String curPieceColor = curPiece.getColor();
@@ -181,7 +216,16 @@ public class gameBoard {
 
         game[erow][ecol] = new Piece("--", "na", erow, ecol);
     }
-
+    /**
+     * Checks if the move is a valid move by taking in coordiates and passing them through smaller functions
+     * PreCondition: called through makeMove()
+     * PostCondition: returns true or false, based on if the move can be executed
+     * 
+     * @param piece
+     * @param erow
+     * @param ecol
+     * @return
+     */
     private boolean isValidMove(Piece piece, int erow, int ecol){
             String curPieceColor = piece.getColor();
             String endSpotColor = game[erow][ecol].getColor();
@@ -231,7 +275,15 @@ public class gameBoard {
 
             return false;
     }
-
+    /**
+     * Returns if the piece is a pawn and can be moved
+     * 
+     * @param srow
+     * @param scol
+     * @param erow
+     * @param ecol
+     * @return
+     */
     private boolean pawnMoveLogic(int srow, int scol, int erow, int ecol){
         if(srow == 1 || srow == 6){
             if(scol == ecol){
@@ -266,6 +318,16 @@ public class gameBoard {
         return false;
     }
 
+    /**
+     * Returns if the piece is a pawn and can be moved
+     * 
+     * @param srow
+     * @param scol
+     * @param erow
+     * @param ecol
+     * @return
+     */
+
     private boolean knightMoveLogic(int srow, int scol, int erow, int ecol){
         if(srow + 2 == erow && scol - 1 == ecol){
             return true;
@@ -287,6 +349,16 @@ public class gameBoard {
         return false;
     }
 
+    /**
+     * Returns if the piece is a pawn and can be moved
+     * 
+     * @param srow
+     * @param scol
+     * @param erow
+     * @param ecol
+     * @return
+     */
+
     private boolean kingMoveLogic(int srow, int scol, int erow, int ecol){
         if(!game[erow][ecol].getType().equals("--")){
             return false;
@@ -302,6 +374,17 @@ public class gameBoard {
 
         return false;
     }
+
+    /**
+     * Checks if the diagonal is clear for bishop and queen movement. 
+     * PostCondition: returns true is diag is clear
+     * 
+     * @param srow
+     * @param scol
+     * @param erow
+     * @param ecol
+     * @return
+     */
 
     private boolean checkDiag(int srow, int scol, int erow, int ecol){          
             int counter = srow - erow - 1;
@@ -352,7 +435,16 @@ public class gameBoard {
 
             return true;
     }
-
+    /**
+     * Checks if the row is clear for rook and queen movement. 
+     * PostCondition: returns true is row is clear
+     * 
+     * @param srow
+     * @param scol
+     * @param erow
+     * @param ecol
+     * @return
+     */
     private boolean checkRow(int srow, int scol, int erow, int ecol){
             @SuppressWarnings("unused")
 
