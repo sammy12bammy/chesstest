@@ -2,19 +2,20 @@ Chess Game
 
 Character for pieces. white has w in front while balck has b in front
 White:
-Pawn = wP
-Rook = wR
-Knight = wN
-Bishop = wB
-King = wK
-Queen = wQ
+Pawn = wP index: 5
+Rook = wR index : 4
+Knight = wN index : 3
+Bishop = wB index : 2
+Queen = wQ index 1
+King = wK index : 0
+
 Black:
-Pawn = bP
-Rook = bR
-Knight = bN
-Bishop = bB
-King = bK
-Queen = bQ
+Pawn = bP index : 11
+Rook = bR index : 10
+Knight = bN index : 9
+Bishop = bB index : 8
+Queen = bQ index : 7
+King = bK index : 6 
 
 BLANKS SQUARES:
 labeled "--"

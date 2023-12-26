@@ -13,7 +13,7 @@ public class gameBoard {
      * Initializes a gameboard clas. This class holds all neccasary methods for chess
      * PostCondition: Initzalizing pieces objects on 8x8 board and setting turn to 0 (Player white)
      * 
-     * @param : no params
+     * @param : no params and no overload
      */
     public gameBoard(){
         makePieces(game, "white");
@@ -45,6 +45,10 @@ public class gameBoard {
         //for debug
         public void changePiece(Piece endPiece, int row, int col){
             game[row][col] = endPiece;
+        }
+
+        public Piece[][] getGameBoardArray(){
+            return game;
         }
 //------------------------------------------------------------------------------------
 
@@ -83,13 +87,13 @@ public class gameBoard {
                 arr[7][7] = new Piece("rook", "white", 7, 7);
 
                 arr[6][0] = new Piece("pawn", "white", 6, 0);
-                arr[6][1] = new Piece("pawn", "white", 6, 0);
-                arr[6][2] = new Piece("pawn", "white", 6, 0);
-                arr[6][3] = new Piece("pawn", "white", 6, 0);
-                arr[6][4] = new Piece("pawn", "white", 6, 0);
-                arr[6][5] = new Piece("pawn", "white", 6, 0);
-                arr[6][6] = new Piece("pawn", "white", 6, 0);
-                arr[6][7] = new Piece("pawn", "white", 6, 0);
+                arr[6][1] = new Piece("pawn", "white", 6, 1);
+                arr[6][2] = new Piece("pawn", "white", 6, 2);
+                arr[6][3] = new Piece("pawn", "white", 6, 3);
+                arr[6][4] = new Piece("pawn", "white", 6, 4);
+                arr[6][5] = new Piece("pawn", "white", 6, 5);
+                arr[6][6] = new Piece("pawn", "white", 6, 6);
+                arr[6][7] = new Piece("pawn", "white", 6, 7);
             } 
             if(color.equals("black")){
                 arr[0][0] = new Piece("rook", "black", 0, 0);
