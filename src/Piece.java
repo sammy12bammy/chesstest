@@ -3,15 +3,37 @@ public class Piece {
     private int col;
     private String type;
     private String color;
+    private int x;
+    private int y;
 
     public Piece(String type, String color, int row, int col){
         this.type = type;
         this.color = color;
         this.row = row;
         this.col = col;
+        x = col * 100;
+        y = row * 100;
     }
     //overload for a blank piece
 
+    public int getX(){
+        return x;
+    }
+
+    public void setX(int x){
+        this.x = x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    public void setY(int y){
+        this.y = y;
+    }
+
+
+    
     public int getRow(){
         return row;
     }
