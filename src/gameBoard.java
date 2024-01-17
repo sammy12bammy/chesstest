@@ -77,14 +77,14 @@ public class gameBoard {
     private static void makePieces(Piece[][]arr, String color){
         try{
             if(color.equals("white")){
-                arr[7][0] = new Piece("rook", "white", 7, 0);
+                arr[7][0] = new Piece("rook", "white", 7, 0, true);
                 arr[7][1] = new Piece("knight", "white", 7, 1);
                 arr[7][2] = new Piece("bishop", "white", 7, 2);
-                arr[7][3] = new Piece("king", "white", 7, 3);
+                arr[7][3] = new Piece("king", "white", 7, 3, true);
                 arr[7][4] = new Piece("queen", "white", 7, 4);
                 arr[7][5] = new Piece("bishop", "white", 7, 5);
                 arr[7][6] = new Piece("knight", "white", 7, 6);
-                arr[7][7] = new Piece("rook", "white", 7, 7);
+                arr[7][7] = new Piece("rook", "white", 7, 7, true);
 
                 arr[6][0] = new Piece("pawn", "white", 6, 0);
                 arr[6][1] = new Piece("pawn", "white", 6, 1);
@@ -96,14 +96,14 @@ public class gameBoard {
                 arr[6][7] = new Piece("pawn", "white", 6, 7);
             } 
             if(color.equals("black")){
-                arr[0][0] = new Piece("rook", "black", 0, 0);
+                arr[0][0] = new Piece("rook", "black", 0, 0, true);
                 arr[0][1] = new Piece("knight", "black", 0, 1);
                 arr[0][2] = new Piece("bishop", "black", 0, 2);
-                arr[0][3] = new Piece("king", "black", 0, 3);
+                arr[0][3] = new Piece("king", "black", 0, 3, true);
                 arr[0][4] = new Piece("queen", "black", 0, 4);
                 arr[0][5] = new Piece("bishop", "black", 0, 5);
                 arr[0][6] = new Piece("knight", "black",0 , 6);
-                arr[0][7] = new Piece("rook", "black", 0, 7);
+                arr[0][7] = new Piece("rook", "black", 0, 7, true);
 
                 arr[1][0] = new Piece("pawn", "black", 1, 0);
                 arr[1][1] = new Piece("pawn", "black", 1, 1);
@@ -144,6 +144,48 @@ public class gameBoard {
         game[erow][ecol] = game[srow][scol];
         game[srow][scol] = new Piece("--", "na", srow, scol);
         turn++;     
+    }
+
+    protected void castleWhite(int scol, int srow, int ecol, int erow){
+        boolean shortCastle;
+        if(ecol - scol == 3){
+            shortCastle = true;
+        } else {
+            shortCastle = false;
+        }
+        if(shortCastle){
+            game[7][1] = new Piece("rook", "white", 7, 1, false);
+            game[7][2] = new Piece("king", "white", 7, 2, false);
+            game[7][0] = new Piece("--", "na", 7, 0);
+            game[7][0] = new Piece("--", "na", 7, 3);
+        } else {
+            game[7][4] = new Piece("rook", "white", 7, 4, false);
+            game[7][5] = new Piece("king", "white", 7, 5, false);
+            game[7][7] = new Piece("--", "na", 7, 7);
+            game[7][6] = new Piece("--", "na", 7, 6);
+            game[7][3] = new Piece("--", "na", 7, 3);
+        }
+    }
+
+    protected void castleBlack(int scol, int srow, int ecol, int erow){
+        boolean shortCastle;
+        if(ecol - scol == 3){
+            shortCastle = true;
+        } else {
+            shortCastle = false;
+        }
+        if(shortCastle){
+            game[0][1] = new Piece("rook", "black", 0, 1, false);
+            game[0][2] = new Piece("king", "black", 0, 2, false);
+            game[0][0] = new Piece("--", "na", 0, 0);
+            game[0][0] = new Piece("--", "na", 0, 3);
+        } else {
+            game[0][4] = new Piece("rook", "black", 0, 4, false);
+            game[0][5] = new Piece("king", "black", 0, 5, false);
+            game[0][7] = new Piece("--", "na", 0, 7);
+            game[0][6] = new Piece("--", "na", 0, 6);
+            game[0][3] = new Piece("--", "na", 0, 3);
+        }
     }
     
     /**
@@ -190,51 +232,6 @@ public class gameBoard {
         game[erow][ecol] = new Piece("--", "na", erow, ecol);
     }
 
-    private void makeKingMove(String color, int srow, int scol, int erow, int ecol){
-        kingBeingMove = true;
-        //find king position
-        //check if the srow match
-        //run makeMove if matches
-        int kingRow;
-        int kingCol;
-        if(color.equals("white")){
-            for(int i = 0; i < game.length; i++){
-                for(int j = 0; i < game[j].length; j++){
-                    if(game[i][j].getType().equals("king") && game[i][j].getColor().equals("white")){
-                        kingRow = i;
-                        kingCol = j;
-                        break;
-                    }
-                }
-            }
-            kingRow = 9;
-            kingCol = 9;
-        } else {
-            for(int i = 0; i < game.length; i++){
-                for(int j = 0; i < game[j].length; j++){
-                    if(game[i][j].getType().equals("king") && game[i][j].getColor().equals("white")){
-                        kingRow = i;
-                        kingCol = j;
-                        break;
-                    }
-                }
-            }
-            kingRow = 9;
-            kingCol = 9;
-        }
-        
-        //fix this 
-        if(srow == kingRow && scol == kingCol){
-            String start = game[srow][scol].getType();
-            String end = game[erow][ecol].getType();
-            //makeMove(start, end);
-
-        }
-
-        kingBeingMove = false;
-            
-
-    }
 
     public void checkMate(String color){
         if(color.equals("white")){

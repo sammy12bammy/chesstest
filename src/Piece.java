@@ -5,6 +5,7 @@ public class Piece {
     private String color;
     private int x;
     private int y;
+    private boolean canCastle;
 
     public Piece(String type, String color, int row, int col){
         this.type = type;
@@ -13,8 +14,22 @@ public class Piece {
         this.col = col;
         x = col * 100;
         y = row * 100;
+        canCastle = false;
+    }
+    //overload for a king or rook
+    public Piece(String type, String color, int row, int col, boolean canCastle){
+        this.type = type;
+        this.color = color;
+        this.row = row;
+        this.col = col;
+        this.canCastle = canCastle;
+        x = col * 100;
+        y = row * 100;
     }
     //overload for a blank piece
+    public boolean canCastle(){
+        return canCastle;
+    }
 
     public int getX(){
         return x;
