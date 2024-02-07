@@ -149,15 +149,15 @@ public class gameBoard {
     protected void castleWhite(int scol, int srow, int ecol, int erow){
         boolean shortCastle;
         if(ecol - scol == 3){
-            shortCastle = true;
-        } else {
             shortCastle = false;
+        } else {
+            shortCastle = true;
         }
         if(shortCastle){
             game[7][1] = new Piece("rook", "white", 7, 1, false);
             game[7][2] = new Piece("king", "white", 7, 2, false);
             game[7][0] = new Piece("--", "na", 7, 0);
-            game[7][0] = new Piece("--", "na", 7, 3);
+            game[7][3] = new Piece("--", "na", 7, 3);
         } else {
             game[7][4] = new Piece("rook", "white", 7, 4, false);
             game[7][5] = new Piece("king", "white", 7, 5, false);
@@ -165,20 +165,21 @@ public class gameBoard {
             game[7][6] = new Piece("--", "na", 7, 6);
             game[7][3] = new Piece("--", "na", 7, 3);
         }
+        turn++;
     }
 
     protected void castleBlack(int scol, int srow, int ecol, int erow){
         boolean shortCastle;
         if(ecol - scol == 3){
-            shortCastle = true;
-        } else {
             shortCastle = false;
+        } else {
+            shortCastle = true;
         }
         if(shortCastle){
             game[0][1] = new Piece("rook", "black", 0, 1, false);
             game[0][2] = new Piece("king", "black", 0, 2, false);
             game[0][0] = new Piece("--", "na", 0, 0);
-            game[0][0] = new Piece("--", "na", 0, 3);
+            game[0][3] = new Piece("--", "na", 0, 3);
         } else {
             game[0][4] = new Piece("rook", "black", 0, 4, false);
             game[0][5] = new Piece("king", "black", 0, 5, false);
@@ -186,6 +187,7 @@ public class gameBoard {
             game[0][6] = new Piece("--", "na", 0, 6);
             game[0][3] = new Piece("--", "na", 0, 3);
         }
+        turn++;
     }
     
     /**

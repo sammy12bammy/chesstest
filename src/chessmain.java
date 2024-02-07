@@ -19,8 +19,14 @@ import java.io.IOException;
 
 public class chessmain{
     public static Piece[][] gameBoardArray;
-    public static final int SCREEN_WIDTH = 800;
-    final static int SCREEN_HEIGHT = 800;
+    /**
+     * Screen Width and Height
+     * 
+     * @Precondition : WIDTH has to equal Height (Has to be a square)
+     */
+    public static final int SCREEN_WIDTH = 600;
+    public static final int SCREEN_HEIGHT = 600;
+
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
     final static String THERMINAL_TEXT_GREEN = "\u001B[32m";
@@ -88,7 +94,7 @@ public class chessmain{
 
         //Swing stuff
         JFrame window = new JFrame();
-        window.setSize(SCREEN_WIDTH,SCREEN_HEIGHT + 24);
+        window.setSize(SCREEN_WIDTH,(int)(SCREEN_HEIGHT * 1.03));
         window.setLocationRelativeTo(null);
         JPanel panel = new JPanel(){
             @Override
@@ -157,6 +163,7 @@ public class chessmain{
                         } else {
                             game.castleBlack(startX, startY, endX, endY);
                         }
+                        window.repaint();
                         
                     }
                     /*

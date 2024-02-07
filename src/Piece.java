@@ -12,8 +12,11 @@ public class Piece {
         this.color = color;
         this.row = row;
         this.col = col;
-        x = col * 100;
-        y = row * 100;
+        //if 800  = * 100
+        //if 600 *
+        //screen / 8 = mulit const
+        x = col * (chessmain.SCREEN_HEIGHT / 8);
+        y = row * (chessmain.SCREEN_WIDTH / 8);
         canCastle = false;
     }
     //overload for a king or rook
@@ -23,8 +26,8 @@ public class Piece {
         this.row = row;
         this.col = col;
         this.canCastle = canCastle;
-        x = col * 100;
-        y = row * 100;
+        x = col * (chessmain.SCREEN_HEIGHT / 8);
+        y = row * (chessmain.SCREEN_WIDTH / 8);
     }
     //overload for a blank piece
     public boolean canCastle(){
@@ -46,9 +49,7 @@ public class Piece {
     public void setY(int y){
         this.y = y;
     }
-
-
-    
+  
     public int getRow(){
         return row;
     }
