@@ -386,8 +386,82 @@ public class validMoves {
 
         return true;
     }
-
+/**
+ * @Param color: current piece color on row and col
+ */
     public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
+        //up right
+        int rowCount = row -1;
+        int colCount = col + 1;
+
+        while(rowCount >= 0 && colCount < 8 ){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount--;
+            colCount++;
+        }
+        //up left
+        rowCount = row -1;
+        colCount = col -1;
+
+        while(rowCount >= 0 && colCount < 8 ){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount--;
+            colCount--;
+        }
+        //bot left
+        rowCount = row +1;
+        colCount = col -1;
+
+        while(rowCount >= 0 && colCount < 8 ){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount++;
+            colCount--;
+        }
+        //bot right
+        rowCount = row +1;
+        colCount = col +1;
+
+        while(rowCount >= 0 && colCount < 8 ){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount++;
+            colCount++;
+        }
+
+
+
+        
         return false;
             
     }
