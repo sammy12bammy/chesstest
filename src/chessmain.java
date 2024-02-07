@@ -24,8 +24,8 @@ public class chessmain{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 600;
-    public static final int SCREEN_HEIGHT = 600;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 800;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
@@ -64,7 +64,8 @@ public class chessmain{
              * Try case for uplaoding the image using Imgur. Will work as long as their is a stable wifi
              * connection and Imgur is still hosting the image
              */
-            BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));   
+            BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));
+            //allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));   
             for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                 for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
                     imgs[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
@@ -79,17 +80,30 @@ public class chessmain{
                  * Try case for using my macbook. The image is saved in my computer and is a second option when 
                  * working offline or imgur does not work
                  */
-                BufferedImage allPieces = ImageIO.read(new File("/Users/sambalent/Downloads/chess.png"));   
+                BufferedImage allPieces = ImageIO.read(new File("/Users/sambalent/Downloads/chess.png"));
                 for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                     for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
                         imgs[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
                         img_index++;
                     }
-                }
+                }   
                 System.out.println(THERMINAL_TEXT_GREEN + "Images split up successully" + THERMINAL_TEXT_RESET);
             } catch(IOException ex){
                 System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a FileIO exception" + THERMINAL_TEXT_RESET);
+                try{
+                    BufferedImage allPieces = ImageIO.read(new File("/Users/balents/Downloads/chess.png"));
+                    for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
+                        for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
+                            imgs[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
+                            img_index++;
+                        }
+                    }
+                } catch(Exception e){
+                    System.out.println("Your out of luck");
+                }
             }
+            
+
         }
 
         //Swing stuff
@@ -158,59 +172,16 @@ public class chessmain{
                     Piece[][] gameArr = game.getGameBoardArray();
                     
                     if(validMoves.castleDetection(gameArr, startX, startY, endX, endY)){
-                        if(gameArr[startY][startX].getColor().equals("white")){
-                            game.castleWhite(startX, startY, endX, endY);
-                        } else {
-                            game.castleBlack(startX, startY, endX, endY);
-                        }
-                        window.repaint();
-                        
+                        visualCastleChanges(gameArr, game, window); 
                     }
                     /*
                      * Checks if the starting piece at startX and startY of gameArr (game class array) is a 
                      * valid color. This prevents errors when selecting blank squares
                      */
-                    else if(gameArr[startY][startX].getColor() != null && gameArr[startY][startX].getColor().equals("white") && game.getTurn() % 2 == 0){                     
-                        if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){    
-                            /*
-                            * makes changes to the visual swing JFrame. Changes the X and Y of the pieces to 
-                            the respective spots where they belong. A x and y instance variable for the piece 
-                            class had to implemented because changing the row and col would not properly display
-                            a moment in the JFrame 
-                            */                
-                            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
-                            gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
-                            window.repaint();
-                            /*
-                             * Makes changes to the gameBoard class. This keeps track of the piece and their positions.
-                             * This is a back end change and will not affect how the game is displayed visually
-                             */
-                            game.makeMove(startY, startX, endY, endX);
-                            game.printGame();                        
-                            if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
-                                System.out.println("King is checked");
-                            } else {
-                                System.out.println("King is not checked");
-                            }
-                        } else {
-                            System.out.println(THERMINAL_TEXT_RED + "validMove false" + THERMINAL_TEXT_RESET);
-                        }                  
-                    } else if(gameArr[startY][startX].getColor() != null && gameArr[startY][startX].getColor().equals("black") && game.getTurn() % 2 == 1){
-                        //Same code as above put for piece color 'black'
-                        if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){
-                            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
-                            gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
-                            window.repaint();
-                            game.makeMove(startY, startX, endY, endX);
-                            game.printGame();
-                            if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
-                                System.out.println("King is checked");
-                            } else {
-                                System.out.println("King is not checked");
-                            }
-                        } else {
-                            System.out.println(THERMINAL_TEXT_RED + "validMove false" + THERMINAL_TEXT_RESET);
-                        }
+                    else if(isColorAndTurnCorrectWhite(gameArr, game)){                     
+                        makeChangesWhite(gameArr, game, window);                  
+                    } else if(isColorAndTurnCorrectBlack(gameArr, game)){
+                        makeChangesBlack(gameArr, game, window);
                     } else if(gameArr[startY][startX].getColor() == null){
                         /*
                          * Game detection for a not picking a valid starting square
@@ -224,7 +195,8 @@ public class chessmain{
                     
                     //resets mouse click
                     startX = -1;
-                    startY = -1;               
+                    startY = -1;
+                    playerTurn(game);
                 }
             }
             
@@ -233,8 +205,6 @@ public class chessmain{
                 
             }
              
-            
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 
@@ -254,6 +224,78 @@ public class chessmain{
         window.setVisible(true);
                      
     }
+    public static void makeChangesWhite(Piece[][] gameArr, gameBoard game, JFrame window){
+        if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){    
+            /**
+            * makes changes to the visual swing JFrame. Changes the X and Y of the pieces to 
+            the respective spots where they belong. A x and y instance variable for the piece 
+            class had to implemented because changing the row and col would not properly display
+            a moment in the JFrame 
+            */                
+            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
+            gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
+            window.repaint();
+            /**
+             * Makes changes to the gameBoard class. This keeps track of the piece and their positions.
+             * This is a back end change and will not affect how the game is displayed visually
+             */
+            game.makeMove(startY, startX, endY, endX);
+            game.printGame();                        
+            if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
+                //move black king
+                System.out.println("King is checked");
+            } else {
+                System.out.println("King is not checked");
+            }
+        } else {
+            System.out.println(THERMINAL_TEXT_RED + "validMove false" + THERMINAL_TEXT_RESET);
+        }
+    }
+
+    public static void makeChangesBlack(Piece[][] gameArr, gameBoard game, JFrame window){
+        if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){
+            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
+            gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
+            window.repaint();
+            game.makeMove(startY, startX, endY, endX);
+            game.printGame();
+            if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
+                System.out.println("King is checked");
+            } else {
+                System.out.println("King is not checked");
+            }
+        } else {
+            System.out.println(THERMINAL_TEXT_RED + "validMove false" + THERMINAL_TEXT_RESET);
+        }
+    }
+
+    public static boolean isColorAndTurnCorrectWhite(Piece[][] gameArr, gameBoard game){
+        return gameArr[startY][startX].getColor() != null && gameArr[startY][startX].getColor().equals("white") && game.getTurn() % 2 == 0;
+    }
+
+    public static boolean isColorAndTurnCorrectBlack(Piece[][] gameArr, gameBoard game){
+        return gameArr[startY][startX].getColor() != null && gameArr[startY][startX].getColor().equals("black") && game.getTurn() % 2 == 1;
+    }
+
+    public static void visualCastleChanges(Piece[][] gameArr, gameBoard game, JFrame window){
+        if(gameArr[startY][startX].getColor().equals("white")){
+            game.castleWhite(startX, startY, endX, endY);
+        } else {
+            game.castleBlack(startX, startY, endX, endY);
+        }
+        window.repaint();
+    }
+
+    public static void playerTurn(gameBoard game){
+        String playerGoing;
+        if(game.getTurn() % 2 == 0){
+            playerGoing = "white";
+        } else {
+            playerGoing = "black";
+        }
+        System.out.println("Player Turn: " + playerGoing);
+    }
+
     /*
      * Returns the image index of a piece in the imgs array. See info.txt for exact index value for each piece
      */

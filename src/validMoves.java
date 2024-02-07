@@ -241,10 +241,11 @@ public class validMoves {
         if(pieceType.equals("knight")){
             return checkKnightCheck(game, curPieceColor, row, col);
         }
-        /* 
+         
         if(pieceType.equals("bishop")){
             return checkBishopCheck(game, curPieceColor, row, col);
         }
+        /* 
         if(pieceType.equals("rook")){
             return checkRookCheck(game, curPieceColor, row, col);
         }
@@ -252,6 +253,7 @@ public class validMoves {
             return checkQueenCheck(game, curPieceColor, row, col);
         }
         */
+        
 
         return false;
     }
@@ -390,10 +392,9 @@ public class validMoves {
  * @Param color: current piece color on row and col
  */
     public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
-        //up right
         int rowCount = row -1;
-        int colCount = col + 1;
-
+        int colCount = col + 1;    
+        //up right
         while(rowCount >= 0 && colCount < 8 ){
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
@@ -411,7 +412,7 @@ public class validMoves {
         rowCount = row -1;
         colCount = col -1;
 
-        while(rowCount >= 0 && colCount < 8 ){
+        while(rowCount >= 0 && colCount >= 0){
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -428,7 +429,7 @@ public class validMoves {
         rowCount = row +1;
         colCount = col -1;
 
-        while(rowCount >= 0 && colCount < 8 ){
+        while(rowCount < 8 && colCount >= 0){
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -445,7 +446,7 @@ public class validMoves {
         rowCount = row +1;
         colCount = col +1;
 
-        while(rowCount >= 0 && colCount < 8 ){
+        while(rowCount < 8 && colCount < 8 ){
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -473,19 +474,77 @@ public class validMoves {
     
 
     public static boolean checkRookCheck(Piece[][] game, String color, int row, int col){
-        
+        //right
+        int rowCount = row;
+        int colCount = col + 1;    
+        while(rowCount >= 0 && colCount < 8){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            colCount++;
+        }
+        //left
+        rowCount = row;
+        colCount = col - 1;    
+        while(rowCount >= 0 && colCount >= 0){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            colCount--;
+        }
+        //up
+        rowCount = row - 1;
+        colCount = col;   
+        while(rowCount >= 0){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount--;
+        }
+        //down
+        rowCount = row + 1;
+        colCount = col;   
+        while(rowCount < 8){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount++;
+        }
+
         return false;
     }
 
-    public static boolean checkQueenCheck(Piece[][] game, String color, int row, int col){
-        /* 
+    public static boolean checkQueenCheck(Piece[][] game, String color, int row, int col){       
         if(checkBishopCheck(game, color, row, col)){
             return true;
         }
         if(checkRookCheck(game, color, row, col)){
             return true;
         }
-        */
         return false;
     }
 
