@@ -54,61 +54,14 @@ public class chessmain{
          * 
          * To see the index of pieces, see info.txt
          */
-        Image imgs[] = new Image[12];
-        final int IMAGE_ALL_PIECES_WIDTH = 1200;
-        final int IMAGE_ALL_PIECES_HEIGHT = 400;
-        final int SUBIMAGE_SIZE = 200;
-        int img_index = 0;
-        try{
-            /*
-             * Try case for uplaoding the image using Imgur. Will work as long as their is a stable wifi
-             * connection and Imgur is still hosting the image
-             */
-            BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));
-            //allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));   
-            for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
-                for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
-                    imgs[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
-                    img_index++;
-                }
-            }
-            System.out.println(THERMINAL_TEXT_GREEN + "Images split up successully" + THERMINAL_TEXT_RESET);
-        } catch (Exception MalformedURLException){
-            System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a URL exception. Trying file" + THERMINAL_TEXT_RESET);
-            try{
-                /*
-                 * Try case for using my macbook. The image is saved in my computer and is a second option when 
-                 * working offline or imgur does not work
-                 */
-                BufferedImage allPieces = ImageIO.read(new File("/Users/sambalent/Downloads/chess.png"));
-                for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
-                    for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
-                        imgs[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
-                        img_index++;
-                    }
-                }   
-                System.out.println(THERMINAL_TEXT_GREEN + "Images split up successully" + THERMINAL_TEXT_RESET);
-            } catch(IOException ex){
-                System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a FileIO exception" + THERMINAL_TEXT_RESET);
-                try{
-                    BufferedImage allPieces = ImageIO.read(new File("/Users/balents/Downloads/chess.png"));
-                    for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
-                        for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
-                            imgs[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
-                            img_index++;
-                        }
-                    }
-                } catch(Exception e){
-                    System.out.println("Your out of luck");
-                }
-            }
-            
+        Image imgs[] = getImgArray();
+        
 
-        }
-
-        //Swing stuff
+        /**
+         * Visual game generation done through swing. Creation of chessboard using custom colors
+         */
         JFrame window = new JFrame();
-        window.setSize(SCREEN_WIDTH,(int)(SCREEN_HEIGHT * 1.03));
+        window.setSize(SCREEN_WIDTH,(int)(SCREEN_HEIGHT * 1.045));
         window.setLocationRelativeTo(null);
         JPanel panel = new JPanel(){
             @Override
@@ -171,7 +124,14 @@ public class chessmain{
 
                     Piece[][] gameArr = game.getGameBoardArray();
                     
+                    if(game.getKingCheckedBlack() || game.getKingCheckedWhite()){
+                        //check for mate
+
+                        //move king
+
+                    }
                     if(validMoves.castleDetection(gameArr, startX, startY, endX, endY)){
+                        System.out.println("got here");
                         visualCastleChanges(gameArr, game, window); 
                     }
                     /*
@@ -179,9 +139,17 @@ public class chessmain{
                      * valid color. This prevents errors when selecting blank squares
                      */
                     else if(isColorAndTurnCorrectWhite(gameArr, game)){                     
-                        makeChangesWhite(gameArr, game, window);                  
+                        makeChangesWhite(gameArr, game, window);
+                        if(validMoves.checkForMate(gameArr, game)){
+                            System.out.println("Game over!");
+                            return;
+                        }                  
                     } else if(isColorAndTurnCorrectBlack(gameArr, game)){
                         makeChangesBlack(gameArr, game, window);
+                        if(validMoves.checkForMate(gameArr, game)){
+                            System.out.println("Game over!");
+                            return;
+                        }
                     } else if(gameArr[startY][startX].getColor() == null){
                         /*
                          * Game detection for a not picking a valid starting square
@@ -192,6 +160,8 @@ public class chessmain{
                         //System message for not making a valid move
                         System.out.println(THERMINAL_TEXT_RED + "Not a valid move" + THERMINAL_TEXT_RESET);
                     }
+                    //check for mate
+                   
                     
                     //resets mouse click
                     startX = -1;
@@ -224,8 +194,65 @@ public class chessmain{
         window.setVisible(true);
                      
     }
+    /**
+     * Returns a array with the images split up
+     * @return
+     */
+    public static Image[] getImgArray(){
+        Image retArr[] = new Image[12];
+        final int IMAGE_ALL_PIECES_WIDTH = 1200;
+        final int IMAGE_ALL_PIECES_HEIGHT = 400;
+        final int SUBIMAGE_SIZE = 200;
+        int img_index = 0;
+        try{
+            /*
+             * Try case for uplaoding the image using Imgur. Will work as long as their is a stable wifi
+             * connection and Imgur is still hosting the image
+             */
+            BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));
+            //allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));   
+            for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
+                for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
+                    retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
+                    img_index++;
+                }
+            }
+            System.out.println(THERMINAL_TEXT_GREEN + "Images split up successully" + THERMINAL_TEXT_RESET);
+        } catch (Exception MalformedURLException){
+            System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a URL exception. Trying file" + THERMINAL_TEXT_RESET);
+            try{
+                /*
+                 * Ran only when offline and the image in correct download folder
+                 */
+                BufferedImage allPieces = ImageIO.read(new File("/Users/sambalent/Downloads/chess.png"));
+                for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
+                    for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
+                        retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
+                        img_index++;
+                    }
+                }   
+                System.out.println(THERMINAL_TEXT_GREEN + "Images split up successully" + THERMINAL_TEXT_RESET);
+            } catch(IOException ex){
+                System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a FileIO exception" + THERMINAL_TEXT_RESET);
+                try{
+                    BufferedImage allPieces = ImageIO.read(new File("/Users/balents/Downloads/chess.png"));
+                    for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
+                        for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
+                            retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
+                            img_index++;
+                        }
+                    }
+                } catch(Exception e){
+                    System.out.println("Your out of luck");
+                }
+            }
+        }
+        return retArr;
+    }
+   
     public static void makeChangesWhite(Piece[][] gameArr, gameBoard game, JFrame window){
         if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){    
+            
             /**
             * makes changes to the visual swing JFrame. Changes the X and Y of the pieces to 
             the respective spots where they belong. A x and y instance variable for the piece 
@@ -242,7 +269,7 @@ public class chessmain{
             game.makeMove(startY, startX, endY, endX);
             game.printGame();                        
             if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
-                //move black king
+                game.setKingCheckedBlack(true);
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
@@ -261,6 +288,7 @@ public class chessmain{
             game.printGame();
             if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
                 System.out.println("King is checked");
+                game.setKingCheckedWhite(true);
             } else {
                 System.out.println("King is not checked");
             }

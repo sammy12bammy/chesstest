@@ -5,7 +5,8 @@ public class gameBoard {
     private Piece[][] game = new Piece[8][8];
     private int turn;
     private boolean madeMove;
-    private boolean kingBeingMove = false;
+    private boolean kingCheckedWhite;
+    private boolean kingCheckedBlack;
     private boolean endGame = false;
     private ArrayList<Piece> capturedPieces = new ArrayList<Piece>();
     
@@ -28,9 +29,27 @@ public class gameBoard {
             }
         }
 
-            turn = 0;
+        turn = 0;
+        kingCheckedWhite = false;
+        kingCheckedBlack = false;
     }
 //Getter and setter methods Methods
+        public void setKingCheckedWhite(boolean bol){
+            kingCheckedWhite = bol;
+        }
+
+        public boolean getKingCheckedWhite(){
+            return kingCheckedWhite;
+        }
+
+        public void setKingCheckedBlack(boolean bol){
+            kingCheckedBlack = bol;
+        }
+
+        public boolean getKingCheckedBlack(){
+            return kingCheckedBlack;
+        }
+
         public boolean getEndGame(){
             return endGame;
         }

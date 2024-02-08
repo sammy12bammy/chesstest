@@ -13,8 +13,7 @@ public class validMoves {
         Piece ePiece = grid[erow][ecol];
         if(sPiece == null){
             return false;
-        }  
-          
+        } 
            
         if(ePiece != null && sPiece.getColor().equals(ePiece.getColor())){
                 return false;
@@ -412,7 +411,7 @@ public class validMoves {
         rowCount = row -1;
         colCount = col -1;
 
-        while(rowCount >= 0 && colCount >= 0){
+        while(rowCount >= 0 && colCount >= 0 && rowCount < 8 && colCount < 8){
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -584,6 +583,83 @@ public class validMoves {
             }
         }
         //return false;
+    }
+    //check all the squares around the king and if they are empty return false
+    public static boolean checkForMate(Piece[][] gameArr, gameBoard game){
+        int row = 0;
+        int col = 0;
+        String color;
+        if(game.getTurn() % 2 == 0){
+            color = "white";
+        } else {
+            color = "black";
+        }
+        for(Piece[] arrRow : gameArr){
+            for(Piece piece : arrRow){
+                if(piece.getType().equals("king") && piece.getColor().equals(color)){
+                    row = piece.getRow();
+                    col = piece.getCol();
+                }
+            }
+        }
+
+        
+        
+        if(!gameArr[row][col].getType().equals("king")){
+            return false;
+        }
+
+        //check 8 spots
+
+        //up 
+        int cRow = row - 1;
+        int cCol = col;
+        if(cRow >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //down 
+        cRow = row + 1;
+        cCol = col;
+        if(cRow < 8 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //right
+        cRow = row;
+        cCol = col + 1;
+        if(cCol < 8 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //left
+        cRow = row;
+        cCol = col - 1;
+        if(cCol >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //up right
+        cRow = row - 1;
+        cCol = col + 1;
+        if(cCol < 8 && cRow >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //up left
+        cRow = row - 1;
+        cCol = col - 1;
+        if(cCol >= 0 && cRow >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //down left
+        cRow = row + 1;
+        cCol = col - 1;
+        if(cCol >= 0 && cRow < 8 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        //down right
+        cRow = row + 1;
+        cCol = col + 1;
+        if(cCol < 8 && cRow < 8 && gameArr[cRow][cCol].getType().equals("--")){
+            return true;
+        }
+        return false;
     }
 
 }
