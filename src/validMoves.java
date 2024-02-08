@@ -30,6 +30,7 @@ public class validMoves {
                 return knightMoveLogic(srow, scol, erow, ecol);
             }
             //bishop
+            
             if(sPiece.getType().equals("bishop")){                                        
                 if(Math.abs(srow - erow) == Math.abs(scol - ecol) && checkDiag(grid, srow,scol,erow,ecol)){
                     return true;
@@ -53,6 +54,7 @@ public class validMoves {
                     }
                 }
             }
+            
             //king
             if(sPiece.getType().equals("king")){
                 return kingMoveLogic(grid, srow, scol, erow, ecol);
@@ -124,28 +126,28 @@ public class validMoves {
 
         if(direction == UP_RIGHT){
             for(int i = 1; i <= counter; i++){
-                if(!game[srow+i][scol+i].getType().equals("--")){
+                if(srow+i < 8 && scol+i < 8 && !game[srow+i][scol+i].getType().equals("--")){
                     return false;
-                }
+                }             
             }
         }
         if(direction == DOWN_RIGHT){
             for(int i = 1; i <= counter; i++){
-                if(!game[srow-i][scol+i].getType().equals("--")){
+                if(srow-i >= 0 && scol+i < 8 && !game[srow-i][scol+i].getType().equals("--")){
                     return false;
                 }
             }
         }
         if(direction == DOWN_LEFT){
             for(int i = 1; i <= counter; i++){
-                if(!game[srow-i][scol-i].getType().equals("--")){
+                if(srow-i >= 0 && scol-i >= 8 && !game[srow-i][scol-i].getType().equals("--")){
                     return false;
                 }
             }
         }
         if(direction == UP_LEFT){
             for(int i = 1; i <= counter; i++){
-                if(!game[srow+i][scol-i].getType().equals("--")){
+                if(srow+i < 8 && scol-i >= 0 && !game[srow+i][scol-i].getType().equals("--")){
                     return false;
                 }
             }
@@ -233,287 +235,310 @@ public class validMoves {
         String curPieceColor = game[row][col].getColor();
         String pieceType = game[row][col].getType();
 
-        if(curPieceColor.equals(color)){
-            return false;
-        }
-
         if(pieceType.equals("pawn")){
             return checkPawnCheck(game, curPieceColor, row, col);
         }
         if(pieceType.equals("knight")){
             return checkKnightCheck(game, curPieceColor, row, col);
         }
+         
         if(pieceType.equals("bishop")){
             return checkBishopCheck(game, curPieceColor, row, col);
         }
+        /* 
         if(pieceType.equals("rook")){
             return checkRookCheck(game, curPieceColor, row, col);
         }
         if(pieceType.equals("queen")){
             return checkQueenCheck(game, curPieceColor, row, col);
         }
+        */
+        
 
         return false;
     }
 
     public static boolean checkPawnCheck(Piece[][] game, String color, int row, int col){
         if(color.equals("white")){
-            if(game[row-1][col+1].getType().equals("king") && game[row-1][col+1].getColor().equals("black")){
+            Piece whiteRight = game[row-1][col+1];
+            Piece whiteLeft = game[row-1][col-1];
+            if(boundPawnCheck(row, col) && whiteRight.getType().equals("king") && whiteRight.getColor().equals("black")){
                 return true;
-            } else if(game[row-1][col-1].getType().equals("king") && game[row-1][col-1].getColor().equals("black")){
+            } else if(boundPawnCheck(row, col) && whiteLeft.getType().equals("king") && whiteLeft.getColor().equals("black")){
                 return true;
+            } else {
+                return false;
             }
         } else {
-            if(game[row+1][col+1].getType().equals("king") && game[row+1][col+1].getColor().equals("white")){
+            Piece blackRight = game[row+1][col+1];
+            Piece blackLeft = game[row+1][col-1];
+            if(boundPawnCheck(row, col) && blackRight.getType().equals("king") && blackRight.getColor().equals("white")){
                 return true;
-            } else if(game[row+1][col-1].getType().equals("king") && game[row+1][col-1].getColor().equals("white")){
+            } else if(boundPawnCheck(row, col) && blackLeft.getType().equals("king") && blackLeft.getColor().equals("white")){
                 return true;
+            } else {
+                return false;
             }
         }
+    }
 
-        return false;
+    public static boolean boundPawnCheck(int row, int col){
+        if(row >= 8 || row < 0){
+            return false;
+        } else if(col >= 8 || col < 0){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public static boolean checkKnightCheck(Piece[][] game, String color, int row, int col){
+        System.out.println("Got to knight check");
         if(color.equals("white")){
-            if(game[row-2][col+1].getType().equals("king") && game[row-2][col+1].getColor().equals("black")){
+            int rowC = row -2;
+            int colC = col+ 1;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[row-2][col+1].getType());
+            if(knightBoundsCheck(row-2, col+1) && game[row-2][col+1].getType().equals("king") && game[row-2][col+1].getColor().equals("black")){
                 return true;
             }
-            if(game[row-2][col-1].getType().equals("king")&& game[row-2][col-1].getColor().equals("black")){
+            rowC = row -2;
+            colC = col -1;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row-2, col-1) && game[row-2][col-1].getType().equals("king")&& game[row-2][col-1].getColor().equals("black")){
                 return true;
             }
-            if(game[row+2][col+1].getType().equals("king")&& game[row+2][col+1].getColor().equals("black")){
+            rowC = row +2;
+            colC = col +1;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row+2, col+1) && game[row+2][col+1].getType().equals("king")&& game[row+2][col+1].getColor().equals("black")){
                 return true;
             }
-            if(game[row+2][col-1].getType().equals("king")&& game[row+2][col-1].getColor().equals("black")){
+            rowC = row +2;
+            colC = col -1;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row+2, col-1) && game[row+2][col-1].getType().equals("king")&& game[row+2][col-1].getColor().equals("black")){
                 return true;
             }
-            if(game[row+1][col+2].getType().equals("king")&& game[row+1][col+2].getColor().equals("black")){
+            rowC = row +1;
+            colC = col +2;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row+1, col+2) && game[row+1][col+2].getType().equals("king")&& game[row+1][col+2].getColor().equals("black")){
                 return true;
             }
-            if(game[row-1][col+2].getType().equals("king")&& game[row-1][col+2].getColor().equals("black")){
+            rowC = row -1;
+            colC = col +2;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row-1, col+2) && game[row-1][col+2].getType().equals("king")&& game[row-1][col+2].getColor().equals("black")){
                 return true;
             }
-            if(game[row+1][col-2].getType().equals("king")&& game[row+1][col-2].getColor().equals("black")){
+            rowC = row +1;
+            colC = col -2;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row+1, col-2) && game[row+1][col-2].getType().equals("king")&& game[row+1][col-2].getColor().equals("black")){
                 return true;
             }
-            if(game[row-1][col-2].getType().equals("king")&& game[row-1][col-2].getColor().equals("black")){
+            rowC = row -1;
+            colC = col -2;
+            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            if(knightBoundsCheck(row-1, col-2) && game[row-1][col-2].getType().equals("king")&& game[row-1][col-2].getColor().equals("black")){
                 return true;
             }
         } else {
-            if(game[row-2][col+1].getType().equals("king") && game[row-2][col+1].getColor().equals("white")){
+            if(knightBoundsCheck(row-2, col+1) && game[row-2][col+1].getType().equals("king") && game[row-2][col+1].getColor().equals("white")){
                 return true;
             }
-            if(game[row-2][col-1].getType().equals("king")&& game[row-2][col-1].getColor().equals("white")){
+            if(knightBoundsCheck(row-2, col-1) && game[row-2][col-1].getType().equals("king")&& game[row-2][col-1].getColor().equals("white")){
                 return true;
             }
-            if(game[row+2][col+1].getType().equals("king")&& game[row+2][col+1].getColor().equals("white")){
+            if(knightBoundsCheck(row+2, col+1) && game[row+2][col+1].getType().equals("king")&& game[row+2][col+1].getColor().equals("white")){
                 return true;
             }
-            if(game[row+2][col-1].getType().equals("king")&& game[row+2][col-1].getColor().equals("white")){
+            if(knightBoundsCheck(row+2, col-1) && game[row+2][col-1].getType().equals("king")&& game[row+2][col-1].getColor().equals("white")){
                 return true;
             }
-            if(game[row+1][col+2].getType().equals("king")&& game[row+1][col+2].getColor().equals("white")){
+            if(knightBoundsCheck(row+1, col+2) && game[row+1][col+2].getType().equals("king")&& game[row+1][col+2].getColor().equals("white")){
                 return true;
             }
-            if(game[row-1][col+2].getType().equals("king")&& game[row-1][col+2].getColor().equals("white")){
+            if(knightBoundsCheck(row-1, col+2) && game[row-1][col+2].getType().equals("king")&& game[row-1][col+2].getColor().equals("white")){
                 return true;
             }
-            if(game[row+1][col-2].getType().equals("king")&& game[row+1][col-2].getColor().equals("white")){
+            if(knightBoundsCheck(row+1, col-2) && game[row+1][col-2].getType().equals("king")&& game[row+1][col-2].getColor().equals("white")){
                 return true;
             }
-            if(game[row-1][col-2].getType().equals("king")&& game[row-1][col-2].getColor().equals("white")){
+            if(knightBoundsCheck(row-1, col-2) && game[row-1][col-2].getType().equals("king")&& game[row-1][col-2].getColor().equals("white")){
                 return true;
             }
         }   
         return false;        
     }
-
-    public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
-        int rowCount;
-        int colCount;
-        
-        if(color.equals("white")){
-            //goes until it reaches a piece of same color
-            //up right
-            //row -  col + 
-            rowCount = row - 1;
-            colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                rowCount--;
-                colCount++;
-            }
-            //bottom right
-            //row + col +1
-            rowCount = row + 1;
-            colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                rowCount++;
-                colCount++;
-            }
-            //bottom left
-            //row + col -
-            rowCount = row + 1;
-            colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                rowCount++;
-                colCount--;
-            }
-            //Top Left
-            //row - col -
-            rowCount = row - 1;
-            colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                rowCount--;
-                colCount--;
-            }
-
-        } else {
-            //up right
-            //row -  col + 
-            rowCount = row - 1;
-            colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                rowCount--;
-                colCount++;
-            }
-            //bottom right
-            //row + col +1
-            rowCount = row + 1;
-            colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                rowCount++;
-                colCount++;
-            }
-            //bottom left
-            //row + col -
-            rowCount = row + 1;
-            colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                rowCount++;
-                colCount--;
-            }
-            //Top Left
-            //row - col -
-            rowCount = row - 1;
-            colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                rowCount--;
-                colCount--;
-            }
+    /*
+     * This method checks if the cords that are being checked are out of bounds. Due to the 
+     * and (&&) statements in the knight check method, the conditional statement wont continue
+     * to be evaluated and therefore not throw a execption
+     * 
+     * @return : returns true if the spot checking is withen the gameboard
+     */
+    private static boolean knightBoundsCheck(int curCheckRow, int curCheckCol){
+        if(curCheckRow >= 8 || curCheckRow < 0){
+            return false;
+        }
+        if(curCheckCol >= 8 || curCheckCol < 0){
+            return false;
         }
 
-        return false;
+        return true;
     }
+/**
+ * @Param color: current piece color on row and col
+ */
+    public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
+        int rowCount = row -1;
+        int colCount = col + 1;    
+        //up right
+        while(rowCount >= 0 && colCount < 8 ){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount--;
+            colCount++;
+        }
+        //up left
+        rowCount = row -1;
+        colCount = col -1;
+
+        while(rowCount >= 0 && colCount >= 0){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount--;
+            colCount--;
+        }
+        //bot left
+        rowCount = row +1;
+        colCount = col -1;
+
+        while(rowCount < 8 && colCount >= 0){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount++;
+            colCount--;
+        }
+        //bot right
+        rowCount = row +1;
+        colCount = col +1;
+
+        while(rowCount < 8 && colCount < 8 ){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount++;
+            colCount++;
+        }
+
+
+
+        
+        return false;
+            
+    }
+    /*
+     * Checks the diagonal for bishop and queen checks, similar to the knight check method
+     * Uopdate: checks rooks as well, dont feel like changing all the names
+     * @return : true if in bounds
+     */
+    
 
     public static boolean checkRookCheck(Piece[][] game, String color, int row, int col){
-        int rowCount;
-        int colCount;
-        
-        if(color.equals("white")){
-            //up
-            rowCount = row - 1;
-            colCount = col;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                rowCount--;
+        //right
+        int rowCount = row;
+        int colCount = col + 1;    
+        while(rowCount >= 0 && colCount < 8){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
             }
-            //down
-            rowCount = row + 1;
-            colCount = col;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                rowCount++;
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
             }
-            //right
-            rowCount = row;
-            colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                colCount++;
-            }
-            //left
-            rowCount = row;
-            colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("black")){
-                    return true;
-                }
-                colCount--;
-            }
-        } else {
-            //up
-            rowCount = row - 1;
-            colCount = col;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                rowCount--;
-            }
-            //down
-            rowCount = row + 1;
-            colCount = col;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                rowCount++;
-            }
-            //right
-            rowCount = row;
-            colCount = col + 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                colCount++;
-            }
-            //left
-            rowCount = row;
-            colCount = col - 1;
-            while(rowCount < 9 && colCount < 9 && game[rowCount][colCount].getType().equals("--") || game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                if(game[rowCount][colCount].getType().equals("king") && game[rowCount][colCount].getColor().equals("white")){
-                    return true;
-                }
-                colCount--;
-            }
+            colCount++;
         }
-        
+        //left
+        rowCount = row;
+        colCount = col - 1;    
+        while(rowCount >= 0 && colCount >= 0){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            colCount--;
+        }
+        //up
+        rowCount = row - 1;
+        colCount = col;   
+        while(rowCount >= 0){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount--;
+        }
+        //down
+        rowCount = row + 1;
+        colCount = col;   
+        while(rowCount < 8){
+            //if its a king of the other color
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
+                return true;
+            }
+            //if next square is not a blank piece
+            if(!game[rowCount][colCount].getType().equals("--")){
+                //out of index
+                rowCount = 10;
+            }
+            rowCount++;
+        }
+
         return false;
     }
 
-    public static boolean checkQueenCheck(Piece[][] game, String color, int row, int col){
+    public static boolean checkQueenCheck(Piece[][] game, String color, int row, int col){       
         if(checkBishopCheck(game, color, row, col)){
             return true;
         }
@@ -521,6 +546,44 @@ public class validMoves {
             return true;
         }
         return false;
+    }
+
+    public static boolean castleDetection(Piece[][] game, int scol, int srow, int ecol, int erow){
+        Piece startP = game[srow][scol];
+        Piece endP = game[erow][ecol];
+        if(startP.getType().equals("--") || endP.getType().equals("--")){
+            return false;
+        }
+        if(startP.canCastle() == false){
+            return false;
+        } 
+        if(endP.canCastle() == false){
+            return false;
+        }
+        //short castle
+        if(ecol - scol == 3){
+            //castle for white
+            if(game[7][1].getType().equals("--") && game[7][2].getType().equals("--")){
+                return true;
+            //for black
+            } else if(game[0][1].getType().equals("--") && game[0][2].getType().equals("--")){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+        //long caslte
+            //white
+            if(game[7][7].getType().equals("--") && game[7][6].getType().equals("--") && game[7][3].getType().equals("--")){
+                return true;
+                //black
+            } else if(game[0][4].getType().equals("--") && game[0][5].getType().equals("--") && game[0][6].getType().equals("--")){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        //return false;
     }
 
 }
