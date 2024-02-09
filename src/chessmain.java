@@ -126,7 +126,12 @@ public class chessmain{
                     
                     if(game.getKingCheckedBlack() || game.getKingCheckedWhite()){
                         //check for mate
-
+                        if(validMoves.checkForMate(gameArr, game)){
+                            System.out.println("Checkmate");
+                            //window.dispose();
+                            //System.exit(0);
+                            return;
+                        }
                         //move king
 
                     }
@@ -140,16 +145,8 @@ public class chessmain{
                      */
                     else if(isColorAndTurnCorrectWhite(gameArr, game)){                     
                         makeChangesWhite(gameArr, game, window);
-                        if(validMoves.checkForMate(gameArr, game)){
-                            System.out.println("Game over!");
-                            return;
-                        }                  
                     } else if(isColorAndTurnCorrectBlack(gameArr, game)){
                         makeChangesBlack(gameArr, game, window);
-                        if(validMoves.checkForMate(gameArr, game)){
-                            System.out.println("Game over!");
-                            return;
-                        }
                     } else if(gameArr[startY][startX].getColor() == null){
                         /*
                          * Game detection for a not picking a valid starting square

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class validMoves {
     /**
      * Checks if the move is a valid move by taking in coordiates and passing them through smaller functions
@@ -396,6 +398,7 @@ public class validMoves {
         //up right
         while(rowCount >= 0 && colCount < 8 ){
             //if its a king of the other color
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -413,6 +416,7 @@ public class validMoves {
 
         while(rowCount >= 0 && colCount >= 0 && rowCount < 8 && colCount < 8){
             //if its a king of the other color
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -430,6 +434,7 @@ public class validMoves {
 
         while(rowCount < 8 && colCount >= 0){
             //if its a king of the other color
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -447,6 +452,7 @@ public class validMoves {
 
         while(rowCount < 8 && colCount < 8 ){
             //if its a king of the other color
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -477,6 +483,7 @@ public class validMoves {
         int rowCount = row;
         int colCount = col + 1;    
         while(rowCount >= 0 && colCount < 8){
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -492,6 +499,7 @@ public class validMoves {
         rowCount = row;
         colCount = col - 1;    
         while(rowCount >= 0 && colCount >= 0){
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -507,6 +515,7 @@ public class validMoves {
         rowCount = row - 1;
         colCount = col;   
         while(rowCount >= 0){
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -522,6 +531,7 @@ public class validMoves {
         rowCount = row + 1;
         colCount = col;   
         while(rowCount < 8){
+            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -611,6 +621,12 @@ public class validMoves {
 
         //check 8 spots
 
+        if(checkSmootherMate(gameArr, row, col)){
+            return true;
+        }
+    }
+
+    public static boolean checkSmootherMate(Piece[][] gameArr, int row, int col){
         //up 
         int cRow = row - 1;
         int cCol = col;
@@ -660,6 +676,35 @@ public class validMoves {
             return true;
         }
         return false;
+    }
+
+    public static String getAreaForPiece(Piece piece){
+        String returnString = "";
+        if(piece.getType().equals("pawn")){
+            returnString += getPawnSquares(piece)
+        } else if (piece.getType().equals("knight")){
+
+        } else if (piece.getType().equals("bishop")){
+
+        } else if (piece.getType().equals("rook")){
+
+        } else if (piece.getType().equals("queen")){
+
+        } else if (piece.getType().equals("king")){
+
+        }
+
+        return returnString;
+    }
+
+    public static String getPawnSquares(Piece piece){
+        String returnString = "";
+        
+        if(piece.getColor().equals("white")){
+
+        }
+
+        return returnString;
     }
 
 }

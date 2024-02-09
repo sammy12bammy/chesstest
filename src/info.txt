@@ -59,3 +59,5 @@ King Checks
 Interate through 2d array and see what pieces are there
 Figure out what piece and detect possible moves. If one of those moves (of other color) is attacking the king, return true
 else return false when the board is interated through and no checks on the king.
+
+Create a 2d array of spots white/ black pieces take up
