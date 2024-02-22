@@ -277,12 +277,7 @@ public class gameBoard {
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
                 if(piece.getColor().equals("white")){
-                    String stringWithCords = validMoves.getAreaForPiece(piece);
-                    for(int i = 0; i < stringWithCords.length(); i+= 2){
-                        int rowValue = Integer.parseInt(stringWithCords.substring(i,i+1));
-                        int colValue = Integer.parseInt(stringWithCords.substring(i + 1,i+2));
-                        whiteSpaceArea[rowValue][colValue] = true;
-                    }
+                    
                 }
             }
         }

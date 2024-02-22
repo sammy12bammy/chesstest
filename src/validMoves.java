@@ -594,6 +594,9 @@ public class validMoves {
         }
         //return false;
     }
+    /*
+     * Beginning of mate detection
+     */
     //check all the squares around the king and if they are empty return false
     public static boolean checkForMate(Piece[][] gameArr, gameBoard game){
         int row = 0;
@@ -624,6 +627,8 @@ public class validMoves {
         if(checkSmootherMate(gameArr, row, col)){
             return true;
         }
+
+        return false
     }
 
     public static boolean checkSmootherMate(Piece[][] gameArr, int row, int col){
@@ -677,34 +682,284 @@ public class validMoves {
         }
         return false;
     }
+    /**
+     * This method is part of detecting checkmate. A method in gameBoard calls this method when looping through
+     * the game Array. Everytime a piece is detected that isnt a blank square, the piece get passed through the 
+     * params along with the gameArr, which is a matrix of the game. The method below detects what type the piece 
+     * is and calls appropriate methods based on the piece type. These methods return arrayList of spots that the
+     * piece covers. Eg a pawn would return a arraylist of piece type that represent spots that it could travel to
+     * and could capture. This gets added into a matrix called *color spaceArea. colorSpaceArea is referenced when 
+     * determining is a piece has any valid spots to move to when checking for checkamte
+     * 
+     * @param piece : piece that wants to be checked
+     * @param gameArr : matrix of the game
+     * @return ArrayList of empty spots piece could travel too
+     */
 
-    public static String getAreaForPiece(Piece piece){
-        String returnString = "";
+    public static ArrayList<Piece> getAreaForPiece(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> coveredSpots;
         if(piece.getType().equals("pawn")){
-            returnString += getPawnSquares(piece)
+            coveredSpots = getPawnCoverage(piece, gameArr);
         } else if (piece.getType().equals("knight")){
-
+            coveredSpots = getKnightCoverage(piece, gameArr);
         } else if (piece.getType().equals("bishop")){
-
+            coveredSpots = getBishopCoverage(piece, gameArr);
         } else if (piece.getType().equals("rook")){
-
+            coveredSpots = getRookCoverage(piece, gameArr);
         } else if (piece.getType().equals("queen")){
-
-        } else if (piece.getType().equals("king")){
-
+            coveredSpots = getQueenCoverage(piece, gameArr);
+        } else{
+            coveredSpots = getKingCoverage(piece, gameArr);
         }
 
-        return returnString;
+        return coveredSpots;
     }
 
-    public static String getPawnSquares(Piece piece){
-        String returnString = "";
-        
+    public static ArrayList<Piece> getPawnCoverage(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> spots = new ArrayList<Piece>();
         if(piece.getColor().equals("white")){
+            Piece right = gameArr[piece.getRow()-1][piece.getCol() + 1];
+            Piece left = gameArr[piece.getRow()-1][piece.getCol() - 1];
+            //FIX OUT OF BOUNDS
+            if(right.getType().equals("--")){
+                spots.add(right);
+            }
+            if(left.getType().equals("--")){
+                spots.add(right);
+            }
+        } else {
+            Piece right = gameArr[piece.getRow()+1][piece.getCol() + 1];
+            Piece left = gameArr[piece.getRow()+1][piece.getCol() - 1];
 
+            if(right.getType().equals("--")){
+                spots.add(right);
+            }
+            if(left.getType().equals("--")){
+                spots.add(right);
+            }
         }
 
-        return returnString;
+        return spots;
+    }
+    //FIX OUT OF BOUNDS
+    public static ArrayList<Piece> getKnightCoverage(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> spots = new ArrayList<Piece>();
+        if(gameArr[piece.getRow()-2][piece.getCol()+1].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()-2][piece.getCol()+1]);
+        }
+        if(gameArr[piece.getRow()-2][piece.getCol()-1].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()-2][piece.getCol()-1]);    
+        }
+        if(gameArr[piece.getRow()-1][piece.getCol()+2].getType().equals("--")){
+                spots.add(gameArr[piece.getRow()-1][piece.getCol()+2]);
+        }
+        if(gameArr[piece.getRow()+1][piece.getCol()+2].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()+1][piece.getCol()+2]);
+        }
+        if(gameArr[piece.getRow()-2][piece.getCol()+1].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()-2][piece.getCol()+1]);
+        }
+        if(gameArr[piece.getRow()-2][piece.getCol()-1].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()-2][piece.getCol()-1]);
+        }
+        if(gameArr[piece.getRow()+1][piece.getCol()-2].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()+1][piece.getCol()-2]);
+        }
+        if(gameArr[piece.getRow()-1][piece.getCol()-2].getType().equals("--")){
+            spots.add(gameArr[piece.getRow()-1][piece.getCol()-2]);
+        }
+        return spots;  
+    }
+
+    public static ArrayList<Piece> getBishopCoverage(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> spots = new ArrayList<Piece>();
+        //up right
+        int rowCount = piece.getRow() -1;
+        int colCount = piece.getCol() + 1;      
+        while(rowCount >= 0 && colCount < 8){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                rowCount = 10;
+            }
+            rowCount--;
+            colCount++;
+        }
+        //down right
+        rowCount = piece.getRow() + 1;
+        colCount = piece.getCol() + 1;      
+        while(rowCount < 8 && colCount < 8){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                rowCount = 10;
+            }
+            rowCount++;
+            colCount++;
+        }
+        //down left
+        rowCount = piece.getRow() + 1;
+        colCount = piece.getCol() - 1;      
+        while(rowCount < 8 && colCount >= 0){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                rowCount = 10;
+            }
+            rowCount++;
+            colCount--;
+        }
+        //up left
+        rowCount = piece.getRow() - 1;
+        colCount = piece.getCol() - 1;      
+        while(rowCount >= 0 && colCount >= 0){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                rowCount = 10;
+            }
+            rowCount--;
+            colCount--;
+        }
+        return spots;
+    }
+
+    public static ArrayList<Piece> getRookCoverage(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> spots = new ArrayList<Piece>();
+        //up 
+        int rowCount = piece.getRow() -1;
+        int colCount = piece.getCol();      
+        while(rowCount >= 0){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                rowCount = -10;
+            }
+            rowCount--;
+        }
+        //down 
+        rowCount = piece.getRow() + 1;
+        colCount = piece.getCol();      
+        while(rowCount < 8){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                rowCount = 10;
+            }
+            rowCount++;
+        }
+        // left
+        rowCount = piece.getRow();
+        colCount = piece.getCol() - 1;      
+        while(colCount >= 0){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                colCount = -10;
+            }
+            colCount--;
+        }
+        //right
+        rowCount = piece.getRow();
+        colCount = piece.getCol() + 1;      
+        while(colCount < 8){
+            //if cur piece is blank
+            if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else {
+                //if its not
+                colCount = 10;
+            }
+            colCount++;
+        }
+        return spots;
+    }
+
+    public static ArrayList<Piece> getQueenCoverage(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> diagSpots = getBishopCoverage(piece, gameArr);
+        ArrayList<Piece> upAndDownSpots = getRookCoverage(piece, gameArr);
+
+        //combining and merging 2 arrays without duplicates
+        diagSpots.removeAll(upAndDownSpots);
+        diagSpots.addAll(upAndDownSpots);
+
+        return diagSpots;
+    }
+
+    public static ArrayList<Piece> getKingCoverage(Piece piece, Piece[][] gameArr){
+        ArrayList<Piece> spots = new ArrayList<Piece>();
+
+        int checkRow;
+        int checkCol;
+
+        //up
+        checkRow = piece.getRow() - 1;
+        checkCol = piece.getCol();
+        if(checkRow >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+        //down
+        checkRow = piece.getRow() + 1;
+        checkCol = piece.getCol();
+        if(checkRow < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+        //left
+        checkRow = piece.getRow();
+        checkCol = piece.getCol() - 1;
+        if(checkCol >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+
+        //right
+        checkRow = piece.getRow();
+        checkCol = piece.getCol() + 1;
+        if(checkCol < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+
+        //upright
+        checkRow = piece.getRow() - 1;
+        checkCol = piece.getCol() + 1;
+        if(checkRow >= 0 && checkCol < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+
+        //upleft
+        checkRow = piece.getRow() - 1;
+        checkCol = piece.getCol() - 1;
+        if(checkRow >= 0 && checkCol >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+
+        //downright
+        checkRow = piece.getRow() + 1;
+        checkCol = piece.getCol() + 1;
+        if(checkRow < 8 && checkCol < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+
+        //downleft
+        checkRow = piece.getRow() + 1;
+        checkCol = piece.getCol() - 1;
+        if(checkRow < 8 && checkCol >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+            spots.add(gameArr[checkRow][checkCol]);
+        }
+        return spots;
     }
 
 }
