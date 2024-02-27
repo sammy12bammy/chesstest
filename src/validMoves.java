@@ -614,72 +614,97 @@ public class validMoves {
                     col = piece.getCol();
                 }
             }
-        }
-
-        
+        }   
         
         if(!gameArr[row][col].getType().equals("king")){
             return false;
         }
 
-        //check 8 spots
+        //find way out of mate
 
-        if(checkSmootherMate(gameArr, row, col)){
+        if(canMoveOutOfMate(gameArr, game, row, col)){
+            return false;
+        } else if (pieceCanBlock()){
+            return false;
+        } else if(kingCanCapture()){
+            return false;
+        } else {
             return true;
         }
-
-        return false
     }
 
-    public static boolean checkSmootherMate(Piece[][] gameArr, int row, int col){
-        //up 
-        int cRow = row - 1;
-        int cCol = col;
-        if(cRow >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+    public static boolean pieceCanBlock(){
+        return true;
+    }
+
+    public static boolean kingCanCapture(){
+        return true;
+    }
+
+    public static boolean canMoveOutOfMate(Piece[][] gameArr, gameBoard game, int row, int col){
+        Piece king = gameArr[row][col];
+        boolean[][] spotsCovered;
+
+        if(king.getColor().equals("white")){
+            spotsCovered = game.getWhiteCoverage();
+        } else {
+            spotsCovered = game.getBlackCoverage();
+        }
+        //check all around the king to see if there are only spots that arent covered and dont have pieces
+        //crow and ccol represent what spot we are checking, checks out of bounds first, then open spot, then piece coverage
+        //if the piece is able to move out of checkmate, returns true for if statement
+        int cRow;
+        int cCol;
+
+        //up
+        cRow = row - 1;
+        cCol = col;
+        if(cRow >= 0 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
             return true;
         }
-        //down 
+        //down
         cRow = row + 1;
         cCol = col;
-        if(cRow < 8 && gameArr[cRow][cCol].getType().equals("--")){
-            return true;
-        }
-        //right
-        cRow = row;
-        cCol = col + 1;
-        if(cCol < 8 && gameArr[cRow][cCol].getType().equals("--")){
+        if(cRow < 8 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
             return true;
         }
         //left
         cRow = row;
         cCol = col - 1;
-        if(cCol >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+        if(cCol >= 0 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
             return true;
         }
-        //up right
+        //right
+        cRow = row;
+        cCol = col + 1;
+        if(cCol < 8 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
+            return true;
+        }
+        //upright
         cRow = row - 1;
         cCol = col + 1;
-        if(cCol < 8 && cRow >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+        if(cRow >= 0 && cCol < 8 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
             return true;
         }
-        //up left
+        //upleft
         cRow = row - 1;
         cCol = col - 1;
-        if(cCol >= 0 && cRow >= 0 && gameArr[cRow][cCol].getType().equals("--")){
+        if(cRow >= 0 && cCol >= 0 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
             return true;
         }
-        //down left
-        cRow = row + 1;
-        cCol = col - 1;
-        if(cCol >= 0 && cRow < 8 && gameArr[cRow][cCol].getType().equals("--")){
-            return true;
-        }
-        //down right
+        //downright
         cRow = row + 1;
         cCol = col + 1;
-        if(cCol < 8 && cRow < 8 && gameArr[cRow][cCol].getType().equals("--")){
+        if(cRow < 8 && cCol < 8 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
             return true;
         }
+        //downleft
+        cRow = row + 1;
+        cCol = col - 1;
+        if(cRow < 8 && cCol >= 0 && gameArr[cRow][cCol].getType().equals("--") && spotsCovered[cRow][cCol] == false){
+            return true;
+        }
+
         return false;
     }
     /**
@@ -720,22 +745,21 @@ public class validMoves {
         if(piece.getColor().equals("white")){
             Piece right = gameArr[piece.getRow()-1][piece.getCol() + 1];
             Piece left = gameArr[piece.getRow()-1][piece.getCol() - 1];
-            //FIX OUT OF BOUNDS
-            if(right.getType().equals("--")){
+            if(right.getCol() < 8 && right.getRow() >= 0 && right.getType().equals("--")){
                 spots.add(right);
             }
-            if(left.getType().equals("--")){
-                spots.add(right);
+            if(left.getCol() >= 0 && left.getRow() >= 0 && left.getType().equals("--")){
+                spots.add(left);
             }
         } else {
             Piece right = gameArr[piece.getRow()+1][piece.getCol() + 1];
             Piece left = gameArr[piece.getRow()+1][piece.getCol() - 1];
 
-            if(right.getType().equals("--")){
+            if(right.getCol() < 8 && right.getRow() < 8 && right.getType().equals("--")){
                 spots.add(right);
             }
-            if(left.getType().equals("--")){
-                spots.add(right);
+            if(left.getRow() < 8 && left.getCol() >= 0 && left.getType().equals("--")){
+                spots.add(left);
             }
         }
 

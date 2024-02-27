@@ -34,6 +34,9 @@ public class gameBoard {
         turn = 0;
         kingCheckedWhite = false;
         kingCheckedBlack = false;
+
+        resetCapturedSpots(whiteSpaceArea);
+        resetCapturedSpots(blackSpaceArea);
     }
 //Getter and setter methods Methods
         public void setKingCheckedWhite(boolean bol){
@@ -70,6 +73,18 @@ public class gameBoard {
 
         public Piece[][] getGameBoardArray(){
             return game;
+        }
+
+        public boolean[][] getWhiteCoverage(){
+            resetCapturedSpots(whiteSpaceArea);
+            updateWhiteArea();
+            return whiteSpaceArea;
+        }
+
+        public boolean[][] getBlackCoverage(){
+            resetCapturedSpots(blackSpaceArea);
+            updateBlackArea();
+            return blackSpaceArea;
         }
 //------------------------------------------------------------------------------------
 
@@ -139,6 +154,14 @@ public class gameBoard {
                 System.out.println("Error with piece generation");
         }
     }
+
+    private void resetCapturedSpots(boolean[][] arr){
+        for(int row = 0; row < arr.length; row++){
+            for(int col = 0; col < arr[row].length; col++){
+                arr[row][col] = false;
+            }
+        }
+    }
     //prints out the game in the terminal
     public void printGame(){
         for(Piece[] row: game)
@@ -164,11 +187,6 @@ public class gameBoard {
         capturePiece(srow, scol, erow, ecol);
         game[erow][ecol] = game[srow][scol];
         game[srow][scol] = new Piece("--", "na", srow, scol);
-        if(turn % 2 == 0){
-            updateWhiteArea();
-        } else {
-            updateBlackArea();
-        }
         turn++;     
     }
 
@@ -273,18 +291,34 @@ public class gameBoard {
      * @param row
      * @param col
      */
-    public void updateWhiteArea(int row, int col){
+    public void updateWhiteArea(){
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
                 if(piece.getColor().equals("white")){
-                    
+                    ArrayList<Piece> arrSpots = validMoves.getAreaForPiece(piece, game);
+                    for(int i = 0; i < arrSpots.size(); i++){
+                        int row = arrSpots.get(i).getRow();
+                        int col = arrSpots.get(i).getCol();
+                        whiteSpaceArea[row][col] = true;
+                    }
                 }
             }
         }
     }
 
     public void updateBlackArea(){
-
+        for(Piece[] rowInArr : game){
+            for(Piece piece : rowInArr){
+                if(piece.getColor().equals("black")){
+                    ArrayList<Piece> arrSpots = validMoves.getAreaForPiece(piece, game);
+                    for(int i = 0; i < arrSpots.size(); i++){
+                        int row = arrSpots.get(i).getRow();
+                        int col = arrSpots.get(i).getCol();
+                        whiteSpaceArea[row][col] = true;
+                    }
+                }
+            }
+        }
     }
     
 
