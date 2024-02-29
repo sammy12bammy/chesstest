@@ -61,3 +61,12 @@ Figure out what piece and detect possible moves. If one of those moves (of other
 else return false when the board is interated through and no checks on the king.
 
 Create a 2d array of spots white/ black pieces take up
+
+Check:
+rewrite to have method to check a gamebaord for check
+
+Getting out of checkmate:
+1. move out
+2. king capture out
+3. Your piece can capture the piece checking your king
+4. Your piece can block
