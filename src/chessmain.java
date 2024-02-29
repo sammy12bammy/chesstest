@@ -131,12 +131,23 @@ public class chessmain{
                             //window.dispose();
                             //System.exit(0);
                             return;
-                        }
+                        } else {
                         //move king
+                            if(gameArr[startY * SECTION_DIVIDER_INT][startX * SECTION_DIVIDER_INT].getType().equals("king")){
+                                if(isColorAndTurnCorrectWhite(gameArr, game)){
+                                    makeChangesWhite(gameArr, game, window);
+                                } else if (isColorAndTurnCorrectBlack(gameArr, game)){
+                                    makeChangesBlack(gameArr, game, window);
+                                } else {
+                                    System.out.println(THERMINAL_TEXT_RED + "Error with moving king" + THERMINAL_TEXT_RESET);
+                                }
+                            } else {
+                                System.out.println("Must select king");
+                            }
+                        }
 
-                    }
-                    if(validMoves.castleDetection(gameArr, startX, startY, endX, endY)){
-                        System.out.println("got here");
+
+                    } else if(validMoves.castleDetection(gameArr, startX, startY, endX, endY)){
                         visualCastleChanges(gameArr, game, window); 
                     }
                     /*
@@ -156,10 +167,7 @@ public class chessmain{
                     } else {
                         //System message for not making a valid move
                         System.out.println(THERMINAL_TEXT_RED + "Not a valid move" + THERMINAL_TEXT_RESET);
-                    }
-                    //check for mate
-                   
-                    
+                    }     
                     //resets mouse click
                     startX = -1;
                     startY = -1;

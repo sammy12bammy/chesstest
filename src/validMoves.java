@@ -246,14 +246,14 @@ public class validMoves {
         if(pieceType.equals("bishop")){
             return checkBishopCheck(game, curPieceColor, row, col);
         }
-        /* 
+         
         if(pieceType.equals("rook")){
             return checkRookCheck(game, curPieceColor, row, col);
         }
         if(pieceType.equals("queen")){
             return checkQueenCheck(game, curPieceColor, row, col);
         }
-        */
+        
         
 
         return false;
@@ -615,10 +615,6 @@ public class validMoves {
                 }
             }
         }   
-        
-        if(!gameArr[row][col].getType().equals("king")){
-            return false;
-        }
 
         //find way out of mate
 
@@ -626,21 +622,26 @@ public class validMoves {
             return false;
         } else if (pieceCanBlock()){
             return false;
-        } else if(kingCanCapture()){
-            return false;
         } else {
             return true;
         }
     }
 
     public static boolean pieceCanBlock(){
-        return true;
+        return false;
     }
 
-    public static boolean kingCanCapture(){
-        return true;
-    }
-
+    /**
+     * This method detects if the piece (king) can be moved to avoid checkmate. This includes the
+     * capture of pieces
+     * 
+     * 
+     * @param gameArr
+     * @param game
+     * @param row
+     * @param col
+     * @return
+     */
     public static boolean canMoveOutOfMate(Piece[][] gameArr, gameBoard game, int row, int col){
         Piece king = gameArr[row][col];
         boolean[][] spotsCovered;
@@ -716,6 +717,9 @@ public class validMoves {
      * and could capture. This gets added into a matrix called *color spaceArea. colorSpaceArea is referenced when 
      * determining is a piece has any valid spots to move to when checking for checkamte
      * 
+     * UPDATE: this method now picks up spots that the pieces cover that are not the same color, e.g. a black knight 
+     * covers a white pawn so the king cannot move there
+     * 
      * @param piece : piece that wants to be checked
      * @param gameArr : matrix of the game
      * @return ArrayList of empty spots piece could travel too
@@ -723,79 +727,137 @@ public class validMoves {
 
     public static ArrayList<Piece> getAreaForPiece(Piece piece, Piece[][] gameArr){
         ArrayList<Piece> coveredSpots;
+        //the variable notPieceColor represents the color of pieces that the current piece can capture
+        //a white knight can capture any black piece
+        String notPieceColor;
+        if(piece.getColor().equals("white")){
+            notPieceColor = "black";
+        } else {
+            notPieceColor = "white";
+        }
+    /* 
         if(piece.getType().equals("pawn")){
             coveredSpots = getPawnCoverage(piece, gameArr);
         } else if (piece.getType().equals("knight")){
-            coveredSpots = getKnightCoverage(piece, gameArr);
+            coveredSpots = getKnightCoverage(piece, gameArr, notPieceColor);
         } else if (piece.getType().equals("bishop")){
-            coveredSpots = getBishopCoverage(piece, gameArr);
+            coveredSpots = getBishopCoverage(piece, gameArr, notPieceColor);
         } else if (piece.getType().equals("rook")){
-            coveredSpots = getRookCoverage(piece, gameArr);
+            coveredSpots = getRookCoverage(piece, gameArr, notPieceColor);
         } else if (piece.getType().equals("queen")){
-            coveredSpots = getQueenCoverage(piece, gameArr);
+            coveredSpots = getQueenCoverage(piece, gameArr, notPieceColor);
         } else{
-            coveredSpots = getKingCoverage(piece, gameArr);
+            coveredSpots = getKingCoverage(piece, gameArr, notPieceColor);
         }
+        */
 
+        String type = piece.getType();
+
+        switch (type) {
+            case "pawn":
+                coveredSpots = getPawnCoverage(piece, gameArr);
+                break;
+            case "knight":
+                coveredSpots = getKnightCoverage(piece, gameArr, notPieceColor);
+                break;
+            case "bishop":
+                coveredSpots = getBishopCoverage(piece, gameArr, notPieceColor);
+                break;
+            case "rook":
+                coveredSpots = getRookCoverage(piece, gameArr, notPieceColor);
+                break;
+            case "queen":
+                coveredSpots = getQueenCoverage(piece, gameArr, notPieceColor);
+                break;
+            case "king":
+                coveredSpots = getKingCoverage(piece, gameArr, notPieceColor);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid Piece input at line 727");
+        }
         return coveredSpots;
     }
 
     public static ArrayList<Piece> getPawnCoverage(Piece piece, Piece[][] gameArr){
         ArrayList<Piece> spots = new ArrayList<Piece>();
+        int cRow;
+        int cCol;
         if(piece.getColor().equals("white")){
-            Piece right = gameArr[piece.getRow()-1][piece.getCol() + 1];
-            Piece left = gameArr[piece.getRow()-1][piece.getCol() - 1];
-            if(right.getCol() < 8 && right.getRow() >= 0 && right.getType().equals("--")){
-                spots.add(right);
+            //right
+            cRow = piece.getRow() - 1;
+            cCol = piece.getCol() + 1;
+            if(cRow >= 0 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals("black"))){
+                spots.add(gameArr[cRow][cCol]);
             }
-            if(left.getCol() >= 0 && left.getRow() >= 0 && left.getType().equals("--")){
-                spots.add(left);
+            //left
+            cRow = piece.getRow() - 1;
+            cCol = piece.getCol() - 1;
+            if(cRow >= 0 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals("black"))){
+                spots.add(gameArr[cRow][cCol]);
             }
         } else {
             Piece right = gameArr[piece.getRow()+1][piece.getCol() + 1];
             Piece left = gameArr[piece.getRow()+1][piece.getCol() - 1];
 
-            if(right.getCol() < 8 && right.getRow() < 8 && right.getType().equals("--")){
+            if(right.getCol() < 8 && right.getRow() < 8 && (right.getType().equals("--")|| right.getColor().equals("white"))){
                 spots.add(right);
             }
-            if(left.getRow() < 8 && left.getCol() >= 0 && left.getType().equals("--")){
+            if(left.getRow() < 8 && left.getCol() >= 0 && (left.getType().equals("--") || left.getColor().equals("white"))){
                 spots.add(left);
             }
         }
 
         return spots;
     }
-    //FIX OUT OF BOUNDS
-    public static ArrayList<Piece> getKnightCoverage(Piece piece, Piece[][] gameArr){
+    public static ArrayList<Piece> getKnightCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
+        int cRow;
+        int cCol;
         ArrayList<Piece> spots = new ArrayList<Piece>();
-        if(gameArr[piece.getRow()-2][piece.getCol()+1].getType().equals("--")){
+
+        cRow = piece.getRow() - 2;
+        cCol = piece.getCol() + 1;
+        if(cRow >= 0 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[piece.getRow()-2][piece.getCol()+1]);
         }
-        if(gameArr[piece.getRow()-2][piece.getCol()-1].getType().equals("--")){
+        cRow = piece.getRow() - 2;
+        cCol = piece.getCol() - 1;
+        if(cRow >= 0 && cCol >= 0 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[piece.getRow()-2][piece.getCol()-1]);    
         }
-        if(gameArr[piece.getRow()-1][piece.getCol()+2].getType().equals("--")){
+        cRow = piece.getRow() - 1;
+        cCol = piece.getCol() + 2;
+        if(cRow >= 0 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
                 spots.add(gameArr[piece.getRow()-1][piece.getCol()+2]);
         }
-        if(gameArr[piece.getRow()+1][piece.getCol()+2].getType().equals("--")){
+        cRow = piece.getRow() + 1;
+        cCol = piece.getCol() + 2;
+        if(cRow < 8 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[piece.getRow()+1][piece.getCol()+2]);
         }
-        if(gameArr[piece.getRow()-2][piece.getCol()+1].getType().equals("--")){
-            spots.add(gameArr[piece.getRow()-2][piece.getCol()+1]);
+        cRow = piece.getRow() + 2;
+        cCol = piece.getCol() + 1;
+        if(cRow < 8 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
+            spots.add(gameArr[piece.getRow()+2][piece.getCol()+1]);
         }
-        if(gameArr[piece.getRow()-2][piece.getCol()-1].getType().equals("--")){
-            spots.add(gameArr[piece.getRow()-2][piece.getCol()-1]);
+        cRow = piece.getRow() + 2;
+        cCol = piece.getCol() - 1;
+        if(cRow < 8 && cCol >= 0 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
+            spots.add(gameArr[piece.getRow()+2][piece.getCol()-1]);
         }
-        if(gameArr[piece.getRow()+1][piece.getCol()-2].getType().equals("--")){
+        cRow = piece.getRow() + 1;
+        cCol = piece.getCol() - 2;
+        if(cRow < 8 && cCol >= 0 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[piece.getRow()+1][piece.getCol()-2]);
         }
-        if(gameArr[piece.getRow()-1][piece.getCol()-2].getType().equals("--")){
+        cRow = piece.getRow() - 1;
+        cCol = piece.getCol() - 2;
+        if(cRow >= 0 && cCol >= 0 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[piece.getRow()-1][piece.getCol()-2]);
         }
         return spots;  
     }
 
-    public static ArrayList<Piece> getBishopCoverage(Piece piece, Piece[][] gameArr){
+    public static ArrayList<Piece> getBishopCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
         ArrayList<Piece> spots = new ArrayList<Piece>();
         //up right
         int rowCount = piece.getRow() -1;
@@ -803,6 +865,8 @@ public class validMoves {
         while(rowCount >= 0 && colCount < 8){
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
                 spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
@@ -818,6 +882,8 @@ public class validMoves {
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
                 spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
+                spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
                 rowCount = 10;
@@ -831,6 +897,8 @@ public class validMoves {
         while(rowCount < 8 && colCount >= 0){
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
                 spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
@@ -846,6 +914,8 @@ public class validMoves {
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
                 spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
+                spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
                 rowCount = 10;
@@ -856,7 +926,7 @@ public class validMoves {
         return spots;
     }
 
-    public static ArrayList<Piece> getRookCoverage(Piece piece, Piece[][] gameArr){
+    public static ArrayList<Piece> getRookCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
         ArrayList<Piece> spots = new ArrayList<Piece>();
         //up 
         int rowCount = piece.getRow() -1;
@@ -864,6 +934,8 @@ public class validMoves {
         while(rowCount >= 0){
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
                 spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
@@ -878,6 +950,8 @@ public class validMoves {
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
                 spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
+                spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
                 rowCount = 10;
@@ -890,6 +964,8 @@ public class validMoves {
         while(colCount >= 0){
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
+                spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
                 spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
@@ -904,6 +980,8 @@ public class validMoves {
             //if cur piece is blank
             if(gameArr[rowCount][colCount].getType().equals("--")){
                 spots.add(gameArr[rowCount][colCount]);
+            } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
+                spots.add(gameArr[rowCount][colCount]);
             } else {
                 //if its not
                 colCount = 10;
@@ -913,9 +991,9 @@ public class validMoves {
         return spots;
     }
 
-    public static ArrayList<Piece> getQueenCoverage(Piece piece, Piece[][] gameArr){
-        ArrayList<Piece> diagSpots = getBishopCoverage(piece, gameArr);
-        ArrayList<Piece> upAndDownSpots = getRookCoverage(piece, gameArr);
+    public static ArrayList<Piece> getQueenCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
+        ArrayList<Piece> diagSpots = getBishopCoverage(piece, gameArr, notPieceColor);
+        ArrayList<Piece> upAndDownSpots = getRookCoverage(piece, gameArr, notPieceColor);
 
         //combining and merging 2 arrays without duplicates
         diagSpots.removeAll(upAndDownSpots);
@@ -924,7 +1002,7 @@ public class validMoves {
         return diagSpots;
     }
 
-    public static ArrayList<Piece> getKingCoverage(Piece piece, Piece[][] gameArr){
+    public static ArrayList<Piece> getKingCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
         ArrayList<Piece> spots = new ArrayList<Piece>();
 
         int checkRow;
@@ -933,54 +1011,54 @@ public class validMoves {
         //up
         checkRow = piece.getRow() - 1;
         checkCol = piece.getCol();
-        if(checkRow >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkRow >= 0 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
         //down
         checkRow = piece.getRow() + 1;
         checkCol = piece.getCol();
-        if(checkRow < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkRow < 8 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
         //left
         checkRow = piece.getRow();
         checkCol = piece.getCol() - 1;
-        if(checkCol >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkCol >= 0 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
 
         //right
         checkRow = piece.getRow();
         checkCol = piece.getCol() + 1;
-        if(checkCol < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkCol < 8 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
 
         //upright
         checkRow = piece.getRow() - 1;
         checkCol = piece.getCol() + 1;
-        if(checkRow >= 0 && checkCol < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkRow >= 0 && checkCol < 8 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
 
         //upleft
         checkRow = piece.getRow() - 1;
         checkCol = piece.getCol() - 1;
-        if(checkRow >= 0 && checkCol >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkRow >= 0 && checkCol >= 0 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
 
         //downright
         checkRow = piece.getRow() + 1;
         checkCol = piece.getCol() + 1;
-        if(checkRow < 8 && checkCol < 8 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkRow < 8 && checkCol < 8 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
 
         //downleft
         checkRow = piece.getRow() + 1;
         checkCol = piece.getCol() - 1;
-        if(checkRow < 8 && checkCol >= 0 && gameArr[checkRow][checkCol].getType().equals("--")){
+        if(checkRow < 8 && checkCol >= 0 && (gameArr[checkRow][checkCol].getType().equals("--") || gameArr[checkRow][checkCol].getColor().equals(notPieceColor))){
             spots.add(gameArr[checkRow][checkCol]);
         }
         return spots;
