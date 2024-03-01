@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class validMoves {
+public class gameLogic {
     /**
      * Checks if the move is a valid move by taking in coordiates and passing them through smaller functions
      * PostCondition: returns true or false, based on if the move can be executed
@@ -23,7 +23,7 @@ public class validMoves {
 
             //pawn movement      
             if(sPiece.getType().equals("pawn")){
-                return pawnMoveLogic(srow, scol, erow, ecol);
+                return pawnMoveLogic(grid, srow, scol, erow, ecol);
                 
             }
             //knight
@@ -54,8 +54,7 @@ public class validMoves {
                         return true;
                     }
                 }
-            }
-            
+            }      
             //king
             if(sPiece.getType().equals("king")){
                 return kingMoveLogic(grid, srow, scol, erow, ecol);
@@ -63,25 +62,52 @@ public class validMoves {
 
             return false;
     }
+    /**
+     * Returns true if the 2 spots that the player selected is a valid move for a pawn
+     * 
+     * @param grid : 2d array of the game
+     * @param srow : starting y cord
+     * @param scol : starting x cord
+     * @param erow : end y cord
+     * @param ecol : end x cord
+     * @return
+     */
 
-    public static boolean pawnMoveLogic(int srow, int scol, int erow, int ecol){
-        if(srow == 1 || srow == 6){
-            if(scol == ecol){
-            //checks if rows are good
-                if(srow - erow == 1 || erow - srow == 1 || srow - erow == 2 || erow - srow == 2){
+    public static boolean pawnMoveLogic(Piece[][] grid, int srow, int scol, int erow, int ecol){
+        String color = grid[srow][scol].getColor();
+        //can only decrease in row for white
+        if(color.equals("white")){
+            if(srow == 6){
+                if(scol != ecol){
+                    return false;
+                } 
+                if(srow - 2 == erow || srow - 1 == erow){
                     return true;
                 } 
-            } 
-        } else{           
-            if(scol == ecol){
-            //checks if rows are good
-                if(srow - erow == 1 || erow - srow == 1){
+            } else {
+                if(scol != ecol){
+                    return false;
+                } 
+                if(srow - 1 == erow){
+                    return true;
+                } 
+            }          
+        } else {
+            if(srow == 1){
+                if(scol != ecol){
+                    return false;
+                } 
+                if(srow + 2 == erow || srow + 1 == erow){
+                    return true;
+                } 
+            } else {
+                if(scol != ecol){
+                    return false;
+                } 
+                if(srow + 1 == erow){
                     return true;
                 } 
             }
-            if(Math.abs(scol - ecol) == 1 && Math.abs(srow - erow) == 1){
-                return true;
-            } 
         }
         return false;
     }
@@ -231,7 +257,73 @@ public class validMoves {
     }
 /*
  * Start of checking for checks
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * 
  */
+    /**
+     * New method for checking for checks. Takes a matrixs of pieces and returns true
+     * if the white king is in check
+     * 
+     * @param gameArr
+     * @return
+     */
+    public static boolean whiteInCheck(Piece[][] gameArr){
+        //iterate through every black piece and return true if one is checking the king
+        for(Piece[] row : gameArr){
+            for(Piece piece : row){
+                if(piece.getColor().equals("black")){
+                    if(isPieceCheckingKing(gameArr, piece)){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean blackInCheck(Piece[][] gameArr){
+        //iterate through every black piece and return true if one is checking the king
+        for(Piece[] row : gameArr){
+            for(Piece piece : row){
+                if(piece.getColor().equals("white")){
+                    if(isPieceCheckingKing(gameArr, piece)){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    /*
+     * VAR COLOR is the current piece that is being checked color, not the king color
+     */
+    public static boolean isPieceCheckingKing(Piece[][] gameArr, Piece piece){
+        String type = piece.getType();
+        int row = piece.getRow();
+        int col = piece.getCol();
+        String color = piece.getColor();
+
+        switch (type){
+            case "pawn":
+                return checkPawnCheck(gameArr, color, row, col);
+            case "knight":
+                return checkKnightCheck(gameArr, color, row, col);
+            case "bishop":
+                return checkBishopCheck(gameArr, color, row, col);
+            case "rook":
+                return checkRookCheck(gameArr, color, row, col);
+            case "queen":
+                return checkQueenCheck(gameArr, color, row, col);
+            default:
+                throw new IllegalArgumentException("Piece isnt part of the game?");
+        }
+
+    }
+    
+    
     public static boolean pieceThatMovedIsCheckingKing(Piece[][] game, String color,int row, int col){
         String curPieceColor = game[row][col].getColor();
         String pieceType = game[row][col].getType();
@@ -254,47 +346,38 @@ public class validMoves {
             return checkQueenCheck(game, curPieceColor, row, col);
         }
         
-        
-
         return false;
     }
 
-    public static boolean checkPawnCheck(Piece[][] game, String color, int row, int col){
+    public static boolean checkPawnCheck(Piece[][] gameArr, String color, int row, int col){
+        int cRow;
+        int cCol;
         if(color.equals("white")){
-            Piece whiteRight = game[row-1][col+1];
-            Piece whiteLeft = game[row-1][col-1];
-            if(boundPawnCheck(row, col) && whiteRight.getType().equals("king") && whiteRight.getColor().equals("black")){
+            cRow = row -1;
+            cCol = col + 1;
+            if(cRow >= 0 && cCol < 8 && gameArr[cRow][cCol].getType().equals("king") && gameArr[cRow][cCol].getColor().equals("black")){
                 return true;
-            } else if(boundPawnCheck(row, col) && whiteLeft.getType().equals("king") && whiteLeft.getColor().equals("black")){
+            } 
+            cCol = col - 1;
+            if(cRow >= 0 && cCol >= 0 && gameArr[cRow][cCol].getType().equals("king") && gameArr[cRow][cCol].getColor().equals("black")){
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            Piece blackRight = game[row+1][col+1];
-            Piece blackLeft = game[row+1][col-1];
-            if(boundPawnCheck(row, col) && blackRight.getType().equals("king") && blackRight.getColor().equals("white")){
-                return true;
-            } else if(boundPawnCheck(row, col) && blackLeft.getType().equals("king") && blackLeft.getColor().equals("white")){
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    public static boolean boundPawnCheck(int row, int col){
-        if(row >= 8 || row < 0){
-            return false;
-        } else if(col >= 8 || col < 0){
             return false;
         } else {
-            return true;
+            cRow = row + 1;
+            cCol = col + 1;
+            if(cRow < 8 && cCol < 8 && gameArr[cRow][cCol].getType().equals("king") && gameArr[cRow][cCol].getColor().equals("white")){
+                return true;
+            } 
+            cCol = col - 1;
+            if(cRow < 8 && cCol >= 0 && gameArr[cRow][cCol].getType().equals("king") && gameArr[cRow][cCol].getColor().equals("white")){
+                return true;
+            } 
+            return false;
         }
     }
 
     public static boolean checkKnightCheck(Piece[][] game, String color, int row, int col){
-        System.out.println("Got to knight check");
         if(color.equals("white")){
             int rowC = row -2;
             int colC = col+ 1;
@@ -481,8 +564,10 @@ public class validMoves {
     public static boolean checkRookCheck(Piece[][] game, String color, int row, int col){
         //right
         int rowCount = row;
-        int colCount = col + 1;    
-        while(rowCount >= 0 && colCount < 8){
+        int colCount = col + 1;  
+        System.out.println(colCount);
+        System.out.println(rowCount);  
+        while(rowCount < 8 && colCount < 8){
             System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
@@ -498,7 +583,7 @@ public class validMoves {
         //left
         rowCount = row;
         colCount = col - 1;    
-        while(rowCount >= 0 && colCount >= 0){
+        while(rowCount < 8 && colCount >= 0){
             System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
@@ -523,7 +608,7 @@ public class validMoves {
             //if next square is not a blank piece
             if(!game[rowCount][colCount].getType().equals("--")){
                 //out of index
-                rowCount = 10;
+                rowCount = -10;
             }
             rowCount--;
         }

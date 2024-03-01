@@ -24,8 +24,8 @@ public class chessmain{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 800;
+    public static final int SCREEN_WIDTH = 1500;
+    public static final int SCREEN_HEIGHT = 1500;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
@@ -126,7 +126,7 @@ public class chessmain{
                     
                     if(game.getKingCheckedBlack() || game.getKingCheckedWhite()){
                         //check for mate
-                        if(validMoves.checkForMate(gameArr, game)){
+                        if(gameLogic.checkForMate(gameArr, game)){
                             System.out.println("Checkmate");
                             //window.dispose();
                             //System.exit(0);
@@ -147,7 +147,7 @@ public class chessmain{
                         }
 
 
-                    } else if(validMoves.castleDetection(gameArr, startX, startY, endX, endY)){
+                    } else if(gameLogic.castleDetection(gameArr, startX, startY, endX, endY)){
                         visualCastleChanges(gameArr, game, window); 
                     }
                     /*
@@ -256,7 +256,7 @@ public class chessmain{
     }
    
     public static void makeChangesWhite(Piece[][] gameArr, gameBoard game, JFrame window){
-        if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){    
+        if(gameLogic.returnValMove(gameArr, startY, startX, endY, endX)){    
             
             /**
             * makes changes to the visual swing JFrame. Changes the X and Y of the pieces to 
@@ -272,9 +272,17 @@ public class chessmain{
              * This is a back end change and will not affect how the game is displayed visually
              */
             game.makeMove(startY, startX, endY, endX);
-            game.printGame();                        
-            if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
+            game.printGame(); 
+            /*                        
+            if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
                 game.setKingCheckedBlack(true);
+                System.out.println("King is checked");
+            } else {
+                System.out.println("King is not checked");
+            }
+            */
+
+            if(gameLogic.whiteInCheck(gameArr)){
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
@@ -285,13 +293,13 @@ public class chessmain{
     }
 
     public static void makeChangesBlack(Piece[][] gameArr, gameBoard game, JFrame window){
-        if(validMoves.returnValMove(gameArr, startY, startX, endY, endX)){
+        if(gameLogic.returnValMove(gameArr, startY, startX, endY, endX)){
             gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
             gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
             window.repaint();
             game.makeMove(startY, startX, endY, endX);
             game.printGame();
-            if(validMoves.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
+            if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
                 System.out.println("King is checked");
                 game.setKingCheckedWhite(true);
             } else {

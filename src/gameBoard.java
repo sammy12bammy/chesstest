@@ -295,7 +295,7 @@ public class gameBoard {
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
                 if(piece.getColor().equals("white")){
-                    ArrayList<Piece> arrSpots = validMoves.getAreaForPiece(piece, game);
+                    ArrayList<Piece> arrSpots = gameLogic.getAreaForPiece(piece, game);
                     for(int i = 0; i < arrSpots.size(); i++){
                         int row = arrSpots.get(i).getRow();
                         int col = arrSpots.get(i).getCol();
@@ -310,7 +310,7 @@ public class gameBoard {
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
                 if(piece.getColor().equals("black")){
-                    ArrayList<Piece> arrSpots = validMoves.getAreaForPiece(piece, game);
+                    ArrayList<Piece> arrSpots = gameLogic.getAreaForPiece(piece, game);
                     for(int i = 0; i < arrSpots.size(); i++){
                         int row = arrSpots.get(i).getRow();
                         int col = arrSpots.get(i).getCol();
