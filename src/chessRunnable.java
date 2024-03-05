@@ -17,7 +17,7 @@ import java.io.IOException;
 
 
 
-public class chessmain{
+public class chessRunnable{
     public static Piece[][] gameBoardArray;
     /**
      * Screen Width and Height
