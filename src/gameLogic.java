@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class gameLogic {
+    private static boolean dubugMode;
     /**
      * Checks if the move is a valid move by taking in coordiates and passing them through smaller functions
      * PostCondition: returns true or false, based on if the move can be executed
@@ -267,26 +268,17 @@ public class gameLogic {
      * @param gameArr
      * @return
      */
-    public static boolean whiteInCheck(Piece[][] gameArr){
-        //iterate through every black piece and return true if one is checking the king
-        for(Piece[] row : gameArr){
-            for(Piece piece : row){
-                if(piece.getColor().equals("black")){
-                    if(isPieceCheckingKing(gameArr, piece)){
-                        return true;
-                    }
-                }
-            }
+    public static boolean colorInCheck(Piece[][] gameArr, String color){
+        String checkingColor;
+        if(color.equals("white")){
+            checkingColor = "black";
+        } else{
+            checkingColor = "white";
         }
-
-        return false;
-    }
-
-    public static boolean blackInCheck(Piece[][] gameArr){
         //iterate through every black piece and return true if one is checking the king
         for(Piece[] row : gameArr){
             for(Piece piece : row){
-                if(piece.getColor().equals("white")){
+                if(piece.getColor() != null && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
                     if(isPieceCheckingKing(gameArr, piece)){
                         return true;
                     }
@@ -318,7 +310,7 @@ public class gameLogic {
             case "queen":
                 return checkQueenCheck(gameArr, color, row, col);
             default:
-                throw new IllegalArgumentException("Piece isnt part of the game?");
+                throw new IllegalArgumentException(type + " Piece isnt part of the game");
         }
 
     }
@@ -381,49 +373,49 @@ public class gameLogic {
         if(color.equals("white")){
             int rowC = row -2;
             int colC = col+ 1;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[row-2][col+1].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[row-2][col+1].getType());
             if(knightBoundsCheck(row-2, col+1) && game[row-2][col+1].getType().equals("king") && game[row-2][col+1].getColor().equals("black")){
                 return true;
             }
             rowC = row -2;
             colC = col -1;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row-2, col-1) && game[row-2][col-1].getType().equals("king")&& game[row-2][col-1].getColor().equals("black")){
                 return true;
             }
             rowC = row +2;
             colC = col +1;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row+2, col+1) && game[row+2][col+1].getType().equals("king")&& game[row+2][col+1].getColor().equals("black")){
                 return true;
             }
             rowC = row +2;
             colC = col -1;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row+2, col-1) && game[row+2][col-1].getType().equals("king")&& game[row+2][col-1].getColor().equals("black")){
                 return true;
             }
             rowC = row +1;
             colC = col +2;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row+1, col+2) && game[row+1][col+2].getType().equals("king")&& game[row+1][col+2].getColor().equals("black")){
                 return true;
             }
             rowC = row -1;
             colC = col +2;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row-1, col+2) && game[row-1][col+2].getType().equals("king")&& game[row-1][col+2].getColor().equals("black")){
                 return true;
             }
             rowC = row +1;
             colC = col -2;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row+1, col-2) && game[row+1][col-2].getType().equals("king")&& game[row+1][col-2].getColor().equals("black")){
                 return true;
             }
             rowC = row -1;
             colC = col -2;
-            System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
+            //System.out.println("Checked Row: " + rowC + " Col: " + colC + ". Piece at spot: " + game[rowC][colC].getType());
             if(knightBoundsCheck(row-1, col-2) && game[row-1][col-2].getType().equals("king")&& game[row-1][col-2].getColor().equals("black")){
                 return true;
             }
@@ -476,12 +468,18 @@ public class gameLogic {
  * @Param color: current piece color on row and col
  */
     public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
+        if(dubugMode) System.out.print("Bishop check looking for : " + color);
         int rowCount = row -1;
         int colCount = col + 1;    
         //up right
-        while(rowCount >= 0 && colCount < 8 ){
+        while(rowCount >= 0 && rowCount < 8 && colCount < 8 ){
             //if its a king of the other color
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            if(debugMode){
+                System.out.println("Checking row: " + rowCount + " col: " + colCount);
+                System.out.println("Piece at place: " + game[rowCount][colCount].getType());
+                System.out.println("Checking up right");
+            }
+            
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -499,7 +497,12 @@ public class gameLogic {
 
         while(rowCount >= 0 && colCount >= 0 && rowCount < 8 && colCount < 8){
             //if its a king of the other color
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            if(debugMode){
+                System.out.println("Checking row: " + rowCount + " col: " + colCount);
+                System.out.println("Piece at place: " + game[rowCount][colCount].getType());
+                System.out.println("Checking up left");
+            }
+            
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -517,7 +520,11 @@ public class gameLogic {
 
         while(rowCount < 8 && colCount >= 0){
             //if its a king of the other color
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            if(debugMode){
+                System.out.println("Checking bottom left");
+                System.out.println("Checking row: " + rowCount + " col: " + colCount);
+                System.out.println("Piece at place: " + game[rowCount][colCount].getType());
+            }
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -535,7 +542,12 @@ public class gameLogic {
 
         while(rowCount < 8 && colCount < 8 ){
             //if its a king of the other color
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            if(dubugMode){
+                System.out.println("Checking bottom right");
+                System.out.println("Checking row: " + rowCount + " col: " + colCount);
+                System.out.println("Piece at place: " + game[rowCount][colCount].getType());
+            }
+            
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
@@ -565,10 +577,10 @@ public class gameLogic {
         //right
         int rowCount = row;
         int colCount = col + 1;  
-        System.out.println(colCount);
-        System.out.println(rowCount);  
+        //System.out.println(colCount);
+        //System.out.println(rowCount);  
         while(rowCount < 8 && colCount < 8){
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+           //System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -584,7 +596,7 @@ public class gameLogic {
         rowCount = row;
         colCount = col - 1;    
         while(rowCount < 8 && colCount >= 0){
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            //System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -600,7 +612,7 @@ public class gameLogic {
         rowCount = row - 1;
         colCount = col;   
         while(rowCount >= 0){
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            //System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
@@ -616,7 +628,7 @@ public class gameLogic {
         rowCount = row + 1;
         colCount = col;   
         while(rowCount < 8){
-            System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
+            //System.out.println("Checking row: " + rowCount + " col: " + colCount + " .Piece at place: " + game[rowCount][colCount].getType());
             //if its a king of the other color
             if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;

@@ -24,8 +24,8 @@ public class chessmain{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 1500;
-    public static final int SCREEN_HEIGHT = 1500;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 800;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
@@ -282,7 +282,7 @@ public class chessmain{
             }
             */
 
-            if(gameLogic.whiteInCheck(gameArr)){
+            if(gameLogic.colorInCheck(gameArr, "white")){
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
@@ -299,9 +299,17 @@ public class chessmain{
             window.repaint();
             game.makeMove(startY, startX, endY, endX);
             game.printGame();
+            //KING CHECK
+            /* 
             if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
                 System.out.println("King is checked");
                 game.setKingCheckedWhite(true);
+            } else {
+                System.out.println("King is not checked");
+            }
+            */
+            if(gameLogic.colorInCheck(gameArr, "black")){
+                System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
             }

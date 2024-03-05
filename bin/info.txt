@@ -70,3 +70,28 @@ Getting out of checkmate:
 2. king capture out
 3. Your piece can capture the piece checking your king
 4. Your piece can block
+
+Check for check
+    if king in check
+        check for mate
+            1.King can move : false (not mate)
+            2.Piece can block
+                Create new gameBoard and copy from og gameBoard
+                Go through each piece possible moves
+                if one piece can block and checkmate is false: return false (recursion)
+            3. Piece can capture attacking piece
+                Similar to piece can block 
+                Same method as piece can block but checking for piece Captures
+                If the piece that is detecting finds a row and col that the checking piece is on, return false
+When piece is moving, under valid moves check if the piece is moving into check. if the piece is moving into check return false for valid moves
+    Before confirming if its a valid move make a new instance of gameBoard 
+    Copy current gameBoard to new gameBoard and make the move
+    Check if there is a check
+    If there is return false for valid moves
+
+Checking for stalemate
+    1. Make move
+    2. If no check, check for stalemate 
+        Can the king move?
+        If no can a piece move? The piece moving could lead to check, therefore a staelemate
+            
