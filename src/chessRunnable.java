@@ -42,7 +42,7 @@ public class chessRunnable{
         clearThermialScreen();;
         gameBoard game = new gameBoard();
         gameBoardArray = game.getGameBoardArray();
-        game.printGame();
+        //game.printGame();
         System.out.println(THERMINAL_TEXT_GREEN + "Gameboard successfully initialized" + THERMINAL_TEXT_RESET);
 
         /*
@@ -272,7 +272,7 @@ public class chessRunnable{
              * This is a back end change and will not affect how the game is displayed visually
              */
             game.makeMove(startY, startX, endY, endX);
-            game.printGame(); 
+            //game.printGame(); 
             /*                        
             if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
                 game.setKingCheckedBlack(true);
@@ -282,7 +282,7 @@ public class chessRunnable{
             }
             */
 
-            if(gameLogic.colorInCheck(gameArr, "white")){
+            if(gameLogic.colorInCheck(game, "white")){
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
@@ -298,7 +298,7 @@ public class chessRunnable{
             gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
             window.repaint();
             game.makeMove(startY, startX, endY, endX);
-            game.printGame();
+            //game.printGame();
             //KING CHECK
             /* 
             if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
@@ -308,7 +308,7 @@ public class chessRunnable{
                 System.out.println("King is not checked");
             }
             */
-            if(gameLogic.colorInCheck(gameArr, "black")){
+            if(gameLogic.colorInCheck(game, "black")){
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");

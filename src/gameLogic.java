@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 
 public class gameLogic {
+    public static boolean debugMode = true;
+
     private static boolean dubugMode;
     /**
      * Checks if the move is a valid move by taking in coordiates and passing them through smaller functions
@@ -263,22 +265,30 @@ public class gameLogic {
  */
     /**
      * New method for checking for checks. Takes a matrixs of pieces and returns true
-     * if the white king is in check
+     * if the king is in check
      * 
      * @param gameArr
      * @return
      */
-    public static boolean colorInCheck(Piece[][] gameArr, String color){
+
+     //problem here is that for every single time that colorInCheck is called,
+     //the game array does not update and it checks the orignal spots that
+     //the game was initalzied with but when prinitng the array using a
+     //method from the game class, the game is updated
+    public static boolean colorInCheck(gameBoard game, String color){
         String checkingColor;
         if(color.equals("white")){
-            checkingColor = "black";
-        } else{
             checkingColor = "white";
+        } else{
+            checkingColor = "black";
         }
+        Piece[][] gameArr = game.getGameBoardArray();
+        game.printGame();
         //iterate through every black piece and return true if one is checking the king
         for(Piece[] row : gameArr){
             for(Piece piece : row){
-                if(piece.getColor() != null && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
+                if(piece.getColor() != null && piece.getColor() != "na" && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
+                    System.out.println(game.whatIsAt(piece.getCol(), piece.getRow()));
                     if(isPieceCheckingKing(gameArr, piece)){
                         return true;
                     }
@@ -468,7 +478,12 @@ public class gameLogic {
  * @Param color: current piece color on row and col
  */
     public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
-        if(dubugMode) System.out.print("Bishop check looking for : " + color);
+        System.out.println("----------------------------");
+        if(debugMode){ 
+            System.out.println("Bishop check looking for : " + color);
+            System.out.println("Row: " + row + " Col: " + col);
+        }
+        System.out.println("----------------------------");
         int rowCount = row -1;
         int colCount = col + 1;    
         //up right

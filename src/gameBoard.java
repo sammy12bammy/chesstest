@@ -173,6 +173,11 @@ public class gameBoard {
                 System.out.println();
             }
     }
+
+    public String whatIsAt(int row, int col){
+        Piece piece = game[row][col];
+        return(piece.getColor() + " " + piece.getType() + " is at " + row + "," + col);
+    }
     //-------------------------------------------------------------------------------------------------------------
     /**
      * Makes move methods that checks if the move is valid and if the king is checked. Captures piece before swapping 
