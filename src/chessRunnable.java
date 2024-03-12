@@ -282,7 +282,7 @@ public class chessRunnable{
             }
             */
 
-            if(gameLogic.colorInCheck(game, "white")){
+            if(gameLogic.colorInCheck(game, "black")){
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
@@ -308,7 +308,7 @@ public class chessRunnable{
                 System.out.println("King is not checked");
             }
             */
-            if(gameLogic.colorInCheck(game, "black")){
+            if(gameLogic.colorInCheck(game, "white")){
                 System.out.println("King is checked");
             } else {
                 System.out.println("King is not checked");
