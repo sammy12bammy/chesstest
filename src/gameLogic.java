@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class gameLogic {
     public static boolean debugMode = false;
-    public static boolean debugMode1 = true;
+    public static boolean debugMode1 = false;
     /**
      * Checks if the move is a valid move by taking in coordiates and passing them through smaller functions
      * PostCondition: returns true or false, based on if the move can be executed
@@ -278,8 +278,6 @@ public class gameLogic {
      //this method is called. The color of the piece that moved is passed through
      //which means that that piece color needs to be checked/ If this method is called
      //after a white move, the we need to check if the color in check is black. 
-     //meaning we or i need to
-     //wrong thats not what this method is. I need to check if said color is in check
     public static boolean colorInCheck(gameBoard game, String color){
         String checkingColor;
         if(color.equals("white")){
@@ -289,11 +287,11 @@ public class gameLogic {
         }
         Piece[][] pieceArray = game.getGameBoardArray();
         game.printGame();
-        //iterate through every black piece and return true if one is checking the king
+        //iterate through every black piece and return true if one is checking the king\
+        /* 
         for(Piece[] rowArr : pieceArray){
             for(Piece piece : rowArr){
                 if(piece != null && piece.getColor() != null && piece.getColor() != "na" && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
-                    //System.out.println(game.whatIsAt(piece.getCol(), piece.getRow()));
                     int row = piece.getRow();
                     int col = piece.getCol();
                     
@@ -304,6 +302,24 @@ public class gameLogic {
                 }
             }
         }
+        */
+
+        for(int r = 0; r < 8; r ++){
+            for(int c = 0; c < 8; c++){
+                Piece piece = pieceArray[r][c];
+
+                if(piece != null && piece.getColor() != null && piece.getColor() != "na" && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
+                    int row = piece.getRow();
+                    int col = piece.getCol();
+                    
+                    System.out.println("Grabbing a: " + piece.getColor() + " " + piece.getType() + " at row: " + row + " col: " + col);
+                    if(isPieceCheckingKing(pieceArray, piece, row, col)){
+                        return true;
+                    }
+                }
+            }
+        }
+        System.out.println("piece at spot 4 down 5 across: " + pieceArray[4][5].getType());
 
         return false;
     }
@@ -492,13 +508,13 @@ public class gameLogic {
             lookForColor = "black";
         } else {
             lookForColor = "white";
-        }
-        System.out.println("----------------------------");
+        }  
         if(debugMode1){ 
+            System.out.println("----------------------------");
             System.out.println(color + "bishop check looking for : " + lookForColor);
             System.out.println("Row: " + row + " Col: " + col);
+            System.out.println("----------------------------");
         }
-        System.out.println("----------------------------");
         int rowCount = row -1;
         int colCount = col + 1;    
         //up right
@@ -721,7 +737,6 @@ public class gameLogic {
     /*
      * Beginning of mate detection
      */
-    //check all the squares around the king and if they are empty return false
     public static boolean checkForMate(Piece[][] gameArr, gameBoard game){
         int row = 0;
         int col = 0;
@@ -744,15 +759,47 @@ public class gameLogic {
 
         if(canMoveOutOfMate(gameArr, game, row, col)){
             return false;
-        } else if (pieceCanBlock()){
+        } else if (otherPieceCanMove(game)){
             return false;
         } else {
             return true;
         }
     }
+    //one of your pieces can move to get your king out of mate
+    public static boolean otherPieceCanMove(gameBoard game){
+        int numPieces = 0;
+        //color that is in check
+        String color;
+        if(game.getTurn() % 2 == 0){
+            color = "white";
+        } else {
+            color = "black";
+        }
 
-    public static boolean pieceCanBlock(){
+        Piece[][] arr = game.getGameBoardArray();
+
+        for(Piece[] row : arr){
+            for(Piece piece : row){
+                if(piece != null && piece.getColor().equals(color)){
+                    gameBoard copy = copyGameBoard(game);
+                }
+            }
+        }
+
+        for(int i = 0; i < numPieces; i++){
+
+        }
         return false;
+    }
+
+    public static gameBoard copyGameBoard(gameBoard board){
+        gameBoard returnBoard = new gameBoard();
+
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                
+            }
+        }
     }
 
     /**
@@ -964,7 +1011,6 @@ public class gameLogic {
         }
         return spots;  
     }
-
     public static ArrayList<Piece> getBishopCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
         ArrayList<Piece> spots = new ArrayList<Piece>();
         //up right
@@ -1033,7 +1079,6 @@ public class gameLogic {
         }
         return spots;
     }
-
     public static ArrayList<Piece> getRookCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
         ArrayList<Piece> spots = new ArrayList<Piece>();
         //up 
@@ -1098,8 +1143,8 @@ public class gameLogic {
         }
         return spots;
     }
-
     public static ArrayList<Piece> getQueenCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
+
         ArrayList<Piece> diagSpots = getBishopCoverage(piece, gameArr, notPieceColor);
         ArrayList<Piece> upAndDownSpots = getRookCoverage(piece, gameArr, notPieceColor);
 
@@ -1109,7 +1154,6 @@ public class gameLogic {
 
         return diagSpots;
     }
-
     public static ArrayList<Piece> getKingCoverage(Piece piece, Piece[][] gameArr, String notPieceColor){
         ArrayList<Piece> spots = new ArrayList<Piece>();
 

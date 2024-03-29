@@ -24,8 +24,8 @@ public class chessRunnable{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 800;
+    public static final int SCREEN_WIDTH = 400;
+    public static final int SCREEN_HEIGHT = 400;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";

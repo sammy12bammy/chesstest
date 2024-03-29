@@ -63,6 +63,10 @@ public class gameBoard {
             return turn;
         }
 
+        public void setTurn(int turn){
+            this.turn = turn;
+        }
+
         public boolean getMoveBol(){
             return madeMove;
         }
@@ -85,6 +89,10 @@ public class gameBoard {
             resetCapturedSpots(blackSpaceArea);
             updateBlackArea();
             return blackSpaceArea;
+        }
+
+        public Piece pieceAt(int row, int col){
+            return game[row][col];
         }
 //------------------------------------------------------------------------------------
 
@@ -166,7 +174,7 @@ public class gameBoard {
     public void printGame(){
         for(Piece[] row: game)
             {
-                for(Piece thing: row)
+            for(Piece thing: row)
                 {
                     System.out.print(thing + "  ");
                 }
@@ -325,6 +333,12 @@ public class gameBoard {
             }
         }
     }
+
+    //for copy
+    public void copySpot(int row, int col, Piece piece){
+        game[row][col] = piece;
+    }
+
     
 
 }
