@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class gameBoard {
     //instance variabls for game board class
@@ -70,7 +71,6 @@ public class gameBoard {
         public boolean getMoveBol(){
             return madeMove;
         }
-        //for debug
         public void changePiece(Piece endPiece, int row, int col){
             game[row][col] = endPiece;
         }
@@ -337,6 +337,27 @@ public class gameBoard {
     //for copy
     public void copySpot(int row, int col, Piece piece){
         game[row][col] = piece;
+    }
+
+    public boolean pieceMovedAndNotinCheck(int row, int col, String color){
+        Piece pieceToMove = game[row][col];
+        //hashmap of possible moves
+        HashMap<Integer, Integer> possibleMoves = gameLogic.getMovesForPiece(pieceToMove, game);
+
+        if(possibleMoves.isEmpty()){
+            return false;
+        }
+
+        for(Integer i : possibleMoves.keySet()) {
+            //the key is the row, the value is the column
+            changePiece(pieceToMove, i, possibleMoves.get(i));
+            if(!gameLogic.colorInCheck(this, color)){
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class gameLogic {
     public static boolean debugMode = false;
@@ -767,7 +768,6 @@ public class gameLogic {
     }
     //one of your pieces can move to get your king out of mate
     public static boolean otherPieceCanMove(gameBoard game){
-        int numPieces = 0;
         //color that is in check
         String color;
         if(game.getTurn() % 2 == 0){
@@ -778,29 +778,94 @@ public class gameLogic {
 
         Piece[][] arr = game.getGameBoardArray();
 
-        for(Piece[] row : arr){
-            for(Piece piece : row){
-                if(piece != null && piece.getColor().equals(color)){
-                    gameBoard copy = copyGameBoard(game);
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = arr[row][col];
+                if (piece != null && piece.getColor() != null && piece.getColor().equals(color)) {
+                    gameBoard copyGettingChecked = copyGameBoard(game);
+                    if(copyGettingChecked.pieceMovedAndNotinCheck(row, col, color)){
+                        return true;
+                    }
                 }
             }
-        }
-
-        for(int i = 0; i < numPieces; i++){
-
         }
         return false;
     }
 
-    public static gameBoard copyGameBoard(gameBoard board){
+    public static gameBoard copyGameBoard(gameBoard board) {
         gameBoard returnBoard = new gameBoard();
+        Piece[][] oldArr = board.getGameBoardArray();
 
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece curPiece = oldArr[i][j];
+                returnBoard.copySpot(i, j, curPiece);
             }
         }
+
+        return returnBoard;
     }
+
+    public static HashMap<Integer, Integer> getMovesForPiece(Piece piece, Piece[][] gameArr){
+        HashMap<Integer, Integer> returnMap;
+        String type = piece.getType();
+        int row = piece.getRow();
+        int col = piece.getCol();
+
+        switch (type){
+            case "pawn":
+                returnMap = getMapForPawn(gameArr, row, col, piece.getColor());
+            case "knight":
+                returnMap = getMapForKnight(row, col);
+            case "bishop":
+                returnMap = getMapForBishop(row, col);
+            case "rook":
+                returnMap = getMapForRook(row, col);
+            case "queen":
+                returnMap = getMapForQueen(row, col);
+            default:
+                throw new IllegalArgumentException(type + " Piece isnt part of the game");
+        }
+
+        return returnMap;
+    }
+
+    public static HashMap<Integer, Integer> getMapForPawn(Piece[][] gameArr, int row, int col, String color){
+        HashMap<Integer, Integer> returnMap = new HashMap<Integer, Integer>();
+
+        if(color.equals("white")){
+            //blocking
+            if(row == 6){
+                if(gameArr[row - 1][col].getType().equals("--")){
+                    returnMap.put(row - 1, col);
+                }
+                if(gameArr[row - 2][col].getType().equals("--")){
+                    returnMap.put(row - 2, col);
+                }
+            } else {
+                if(gameArr[row - 1][col].getType().equals("--")){
+                    returnMap.put(row - 1, col);
+                }
+            }
+            //capture
+        } else {
+            if(row == 1){
+                //blocking
+                if(gameArr[row + 1][col].getType().equals("--")){
+                    returnMap.put(row - 1, col);
+                }
+                if(gameArr[row + 2][col].getType().equals("--")){
+                    returnMap.put(row - 2, col);
+                }
+            } else {
+                //capture
+                if(gameArr[row + 1][col].getType().equals("--")){
+                    returnMap.put(row - 1, col);
+                }
+            }
+        }
+        return returnMap;
+    }  
 
     /**
      * This method detects if the piece (king) can be moved to avoid checkmate. This includes the
