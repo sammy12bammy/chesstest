@@ -308,7 +308,7 @@ public class gameBoard {
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
                 if(piece.getColor().equals("white")){
-                    ArrayList<Piece> arrSpots = gameLogic.getAreaForPiece(piece, game);
+                    ArrayList<Piece> arrSpots = checkmate.getAreaForPiece(piece, game);
                     for(int i = 0; i < arrSpots.size(); i++){
                         int row = arrSpots.get(i).getRow();
                         int col = arrSpots.get(i).getCol();
@@ -323,7 +323,7 @@ public class gameBoard {
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
                 if(piece.getColor().equals("black")){
-                    ArrayList<Piece> arrSpots = gameLogic.getAreaForPiece(piece, game);
+                    ArrayList<Piece> arrSpots = checkmate.getAreaForPiece(piece, game);
                     for(int i = 0; i < arrSpots.size(); i++){
                         int row = arrSpots.get(i).getRow();
                         int col = arrSpots.get(i).getCol();
@@ -342,7 +342,7 @@ public class gameBoard {
     public boolean pieceMovedAndNotinCheck(int row, int col, String color){
         Piece pieceToMove = game[row][col];
         //hashmap of possible moves
-        HashMap<Integer, Integer> possibleMoves = gameLogic.getMovesForPiece(pieceToMove, game);
+        HashMap<Integer, Integer> possibleMoves = checkmate.getMovesForPiece(pieceToMove, game);
 
         if(possibleMoves.isEmpty()){
             return false;
@@ -350,14 +350,16 @@ public class gameBoard {
 
         for(Integer i : possibleMoves.keySet()) {
             //the key is the row, the value is the column
-            changePiece(pieceToMove, i, possibleMoves.get(i));
-            if(!gameLogic.colorInCheck(this, color)){
-                return true;
+            if(i >= 0 && i < 8 && possibleMoves.get(i) >= 0 && possibleMoves.get(i) < 8){
+                changePiece(pieceToMove, i, possibleMoves.get(i));
+                if(!gameLogic.colorInCheck(this, color)){
+                    return true;
+                }
+                changePiece(pieceToMove, row, col);
             }
         }
 
         return false;
-
     }
 
     

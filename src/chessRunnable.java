@@ -126,7 +126,7 @@ public class chessRunnable{
                     
                     if(game.getKingCheckedBlack() || game.getKingCheckedWhite()){
                         //check for mate
-                        if(gameLogic.checkForMate(gameArr, game)){
+                        if(checkmate.checkForMate(gameArr, game)){
                             System.out.println("Checkmate");
                             //window.dispose();
                             //System.exit(0);
