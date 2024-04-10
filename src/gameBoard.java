@@ -121,15 +121,15 @@ public class gameBoard {
     private static void makePieces(Piece[][]arr, String color){
         try{
             if(color.equals("white")){
-                arr[7][0] = new Piece("rook", "white", 7, 0, true);
-                arr[7][1] = new Piece("knight", "white", 7, 1);
+                //arr[7][0] = new Piece("rook", "white", 7, 0, true);
+                //arr[7][1] = new Piece("knight", "white", 7, 1);
                 arr[7][2] = new Piece("bishop", "white", 7, 2);
                 arr[7][3] = new Piece("king", "white", 7, 3, true);
                 arr[7][4] = new Piece("queen", "white", 7, 4);
-                arr[7][5] = new Piece("bishop", "white", 7, 5);
-                arr[7][6] = new Piece("knight", "white", 7, 6);
-                arr[7][7] = new Piece("rook", "white", 7, 7, true);
-
+                //arr[7][5] = new Piece("bishop", "white", 7, 5);
+                //arr[7][6] = new Piece("knight", "white", 7, 6);
+                //arr[7][7] = new Piece("rook", "white", 7, 7, true);
+                /* 
                 arr[6][0] = new Piece("pawn", "white", 6, 0);
                 arr[6][1] = new Piece("pawn", "white", 6, 1);
                 arr[6][2] = new Piece("pawn", "white", 6, 2);
@@ -138,6 +138,7 @@ public class gameBoard {
                 arr[6][5] = new Piece("pawn", "white", 6, 5);
                 arr[6][6] = new Piece("pawn", "white", 6, 6);
                 arr[6][7] = new Piece("pawn", "white", 6, 7);
+                */
             } 
             if(color.equals("black")){
                 arr[0][0] = new Piece("rook", "black", 0, 0, true);
@@ -307,7 +308,7 @@ public class gameBoard {
     public void updateWhiteArea(){
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
-                if(piece.getColor().equals("white")){
+                if(piece.getColor()!= null && piece.getColor().equals("white")){
                     ArrayList<Piece> arrSpots = checkmate.getAreaForPiece(piece, game);
                     for(int i = 0; i < arrSpots.size(); i++){
                         int row = arrSpots.get(i).getRow();
@@ -322,7 +323,7 @@ public class gameBoard {
     public void updateBlackArea(){
         for(Piece[] rowInArr : game){
             for(Piece piece : rowInArr){
-                if(piece.getColor().equals("black")){
+                if(piece.getColor()!= null && piece.getColor().equals("black")){
                     ArrayList<Piece> arrSpots = checkmate.getAreaForPiece(piece, game);
                     for(int i = 0; i < arrSpots.size(); i++){
                         int row = arrSpots.get(i).getRow();

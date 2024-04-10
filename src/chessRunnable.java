@@ -24,8 +24,8 @@ public class chessRunnable{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 400;
-    public static final int SCREEN_HEIGHT = 400;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 800;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
@@ -125,27 +125,13 @@ public class chessRunnable{
                     Piece[][] gameArr = game.getGameBoardArray();
                     
                     if(game.getKingCheckedBlack() || game.getKingCheckedWhite()){
-                        //check for mate
-                        if(checkmate.checkForMate(gameArr, game)){
-                            System.out.println("Checkmate");
-                            //window.dispose();
-                            //System.exit(0);
-                            return;
-                        } else {
-                        //move king
-                            if(gameArr[startY * SECTION_DIVIDER_INT][startX * SECTION_DIVIDER_INT].getType().equals("king")){
-                                if(isColorAndTurnCorrectWhite(gameArr, game)){
-                                    makeChangesWhite(gameArr, game, window);
-                                } else if (isColorAndTurnCorrectBlack(gameArr, game)){
-                                    makeChangesBlack(gameArr, game, window);
-                                } else {
-                                    System.out.println(THERMINAL_TEXT_RED + "Error with moving king" + THERMINAL_TEXT_RESET);
-                                }
-                            } else {
-                                System.out.println("Must select king");
-                            }
-                        }
+                        System.out.println("You are not in mate!");
+                        /* 
+                            
+                            write the stuff about moving the king and checking if the move prevents check here
 
+
+                        */
 
                     } else if(gameLogic.castleDetection(gameArr, startX, startY, endX, endY)){
                         visualCastleChanges(gameArr, game, window); 
@@ -283,7 +269,14 @@ public class chessRunnable{
             */
 
             if(gameLogic.colorInCheck(game, "black")){
+                game.setKingCheckedBlack(true);
                 System.out.println("King is checked");
+                if(checkmate.checkForMate(gameArr, game)){
+                    System.out.println("Checkmate");
+                    //window.dispose();
+                    //System.exit(0);
+                    return;
+                }
             } else {
                 System.out.println("King is not checked");
             }
@@ -309,7 +302,14 @@ public class chessRunnable{
             }
             */
             if(gameLogic.colorInCheck(game, "white")){
+                game.setKingCheckedWhite(true);
                 System.out.println("King is checked");
+                if(checkmate.checkForMate(gameArr, game)){
+                    System.out.println("Checkmate");
+                    //window.dispose();
+                    //System.exit(0);
+                    return;
+                }
             } else {
                 System.out.println("King is not checked");
             }

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class gameLogic {
     public static boolean debugMode = false;
     public static boolean debugMode1 = false;
@@ -287,40 +284,19 @@ public class gameLogic {
             checkingColor = "white";
         }
         Piece[][] pieceArray = game.getGameBoardArray();
-        game.printGame();
-        //iterate through every black piece and return true if one is checking the king\
-        /* 
-        for(Piece[] rowArr : pieceArray){
-            for(Piece piece : rowArr){
+        //game.printGame();
+
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                Piece piece = pieceArray[row][col];            
                 if(piece != null && piece.getColor() != null && piece.getColor() != "na" && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
-                    int row = piece.getRow();
-                    int col = piece.getCol();
-                    
-                    System.out.println("Grabbing a: " + piece.getColor() + " " + piece.getType() + " at row: " + row + " col: " + col);
+                    //System.out.println("Grabbing a: " + piece.getColor() + " " + piece.getType() + " at row: " + row + " col: " + col);
                     if(isPieceCheckingKing(pieceArray, piece, row, col)){
                         return true;
                     }
                 }
             }
         }
-        */
-
-        for(int r = 0; r < 8; r ++){
-            for(int c = 0; c < 8; c++){
-                Piece piece = pieceArray[r][c];
-
-                if(piece != null && piece.getColor() != null && piece.getColor() != "na" && piece.getColor().equals(checkingColor) && !piece.getType().equals("king")){
-                    int row = piece.getRow();
-                    int col = piece.getCol();
-                    
-                    System.out.println("Grabbing a: " + piece.getColor() + " " + piece.getType() + " at row: " + row + " col: " + col);
-                    if(isPieceCheckingKing(pieceArray, piece, row, col)){
-                        return true;
-                    }
-                }
-            }
-        }
-        System.out.println("piece at spot 4 down 5 across: " + pieceArray[4][5].getType());
 
         return false;
     }
@@ -506,9 +482,9 @@ public class gameLogic {
     public static boolean checkBishopCheck(Piece[][] game, String color, int row, int col){
         String lookForColor;
         if(color.equals("white")){
-            lookForColor = "black";
-        } else {
             lookForColor = "white";
+        } else {
+            lookForColor = "black";
         }  
         if(debugMode1){ 
             System.out.println("----------------------------");
@@ -527,7 +503,7 @@ public class gameLogic {
                 System.out.println("Checking up right");
             }
             
-            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(lookForColor)){
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
             //if next square is not a blank piece
@@ -550,7 +526,7 @@ public class gameLogic {
                 System.out.println("Checking up left");
             }
             
-            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(lookForColor)){
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
             //if next square is not a blank piece
@@ -572,7 +548,7 @@ public class gameLogic {
                 System.out.println("Checking row: " + rowCount + " col: " + colCount);
                 System.out.println("Piece at place: " + game[rowCount][colCount].getType());
             }
-            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(lookForColor)){
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
             //if next square is not a blank piece
@@ -595,7 +571,7 @@ public class gameLogic {
                 System.out.println("Piece at place: " + game[rowCount][colCount].getType());
             }
             
-            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(lookForColor)){
+            if(game[rowCount][colCount].getType().equals("king") && !game[rowCount][colCount].getColor().equals(color)){
                 return true;
             }
             //if next square is not a blank piece

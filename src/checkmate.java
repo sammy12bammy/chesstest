@@ -71,7 +71,7 @@ public class checkmate {
     }
 
     public static HashMap<Integer, Integer> getMovesForPiece(Piece piece, Piece[][] gameArr){
-        HashMap<Integer, Integer> returnMap;
+        HashMap<Integer, Integer> returnMap = new HashMap<Integer, Integer>();
         String type = piece.getType();
         int row = piece.getRow();
         int col = piece.getCol();
@@ -87,6 +87,8 @@ public class checkmate {
                 returnMap = getMapForRook(gameArr, row, col, piece.getColor());
             case "queen":
                 returnMap = getMapForQueen(gameArr, row, col, piece.getColor());
+            default:
+                
         }
 
         return returnMap;
@@ -155,6 +157,7 @@ public class checkmate {
         } else {
             otherColor = "white";
         }
+        //check if the checking row and col wont go out of bound. Then if they dont, check if the cords should be put in the map
 
         if(gameArr[row-2][col-1].getType().equals("--") || gameArr[row-2][col-1].getColor().equals(otherColor)){
             returnMap.put(row-2, col-1);
@@ -482,18 +485,21 @@ public class checkmate {
             //left
             cRow = piece.getRow() - 1;
             cCol = piece.getCol() - 1;
-            if(cRow >= 0 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals("black"))){
+            if(cRow >= 0 && cCol >= 0 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals("black"))){
                 spots.add(gameArr[cRow][cCol]);
             }
         } else {
-            Piece right = gameArr[piece.getRow()+1][piece.getCol() + 1];
-            Piece left = gameArr[piece.getRow()+1][piece.getCol() - 1];
-
-            if(right.getCol() < 8 && right.getRow() < 8 && (right.getType().equals("--")|| right.getColor().equals("white"))){
-                spots.add(right);
+            //right
+            cRow = piece.getRow() + 1;
+            cCol = piece.getCol() + 1;
+            if(cRow < 8 && cCol < 8 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals("black"))){
+                spots.add(gameArr[cRow][cCol]);
             }
-            if(left.getRow() < 8 && left.getCol() >= 0 && (left.getType().equals("--") || left.getColor().equals("white"))){
-                spots.add(left);
+            //left
+            cRow = piece.getRow() + 1;
+            cCol = piece.getCol() - 1;
+            if(cRow < 8 && cCol >= 0 && (gameArr[cRow][cCol].getType().equals("--") || gameArr[cRow][cCol].getColor().equals("black"))){
+                spots.add(gameArr[cRow][cCol]);
             }
         }
 
