@@ -200,7 +200,7 @@ public class chessRunnable{
              * Try case for uplaoding the image using Imgur. Will work as long as their is a stable wifi
              * connection and Imgur is still hosting the image
              */
-            BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));
+            BufferedImage allPieces = ImageIO.read(new File("chess.png"));
             //allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));   
             for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                 for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
@@ -215,7 +215,7 @@ public class chessRunnable{
                 /*
                  * Ran only when offline and the image in correct download folder
                  */
-                BufferedImage allPieces = ImageIO.read(new File("/Users/sambalent/Downloads/chess.png"));
+                BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));
                 for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                     for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
                         retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
@@ -225,17 +225,7 @@ public class chessRunnable{
                 System.out.println(THERMINAL_TEXT_GREEN + "Images split up successully" + THERMINAL_TEXT_RESET);
             } catch(IOException ex){
                 System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a FileIO exception" + THERMINAL_TEXT_RESET);
-                try{
-                    BufferedImage allPieces = ImageIO.read(new File("/Users/balents/Downloads/chess.png"));
-                    for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
-                        for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
-                            retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
-                            img_index++;
-                        }
-                    }
-                } catch(Exception e){
-                    System.out.println("Your out of luck");
-                }
+                
             }
         }
         return retArr;

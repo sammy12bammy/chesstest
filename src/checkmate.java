@@ -23,8 +23,10 @@ public class checkmate {
         //find way out of mate
 
         if(canMoveOutOfMate(gameArr, game, row, col)){
+            System.out.println("Can move");
             return false;
         } else if (otherPieceCanMove(game)){
+            System.out.println("Other piece can move");
             return false;
         } else {
             return true;
@@ -48,6 +50,7 @@ public class checkmate {
                 if (piece != null && piece.getColor() != null && piece.getColor().equals(color)) {
                     gameBoard copyGettingChecked = copyGameBoard(game);
                     if(copyGettingChecked.pieceMovedAndNotinCheck(row, col, color)){
+                        System.out.println("Piece that can move is a: " + piece.getType() + " at " + piece.getRow() + "," + piece.getCol());
                         return true;
                     }
                 }
@@ -157,31 +160,63 @@ public class checkmate {
         } else {
             otherColor = "white";
         }
-        //check if the checking row and col wont go out of bound. Then if they dont, check if the cords should be put in the map
-
-        if(gameArr[row-2][col-1].getType().equals("--") || gameArr[row-2][col-1].getColor().equals(otherColor)){
-            returnMap.put(row-2, col-1);
+        int cRow;
+        int cCol;
+        cRow = row - 2;
+        cCol = col - 1; 
+        if(cRow >= 0 && cCol >= 0){
+            if(gameArr[row-2][col-1].getType().equals("--") || gameArr[row-2][col-1].getColor().equals(otherColor)){
+                returnMap.put(row-2, col-1);
+            }
         }
-        if(gameArr[row-2][col+1].getType().equals("--") || gameArr[row-2][col+1].getColor().equals(otherColor)){
-            returnMap.put(row-2, col+1);
+        cRow = row - 2;
+        cCol = col + 1; 
+        if(cRow >= 0 && cCol < 8){   
+            if(gameArr[row-2][col+1].getType().equals("--") || gameArr[row-2][col+1].getColor().equals(otherColor)){
+                returnMap.put(row-2, col+1);
+            }
         }
-        if(gameArr[row-1][col+2].getType().equals("--") || gameArr[row-1][col+2].getColor().equals(otherColor)){
-            returnMap.put(row-1, col+2);
+        cRow = row - 1;
+        cCol = col + 2; 
+        if(cRow >= 0 && cCol < 8){
+            if(gameArr[row-1][col+2].getType().equals("--") || gameArr[row-1][col+2].getColor().equals(otherColor)){
+                returnMap.put(row-1, col+2);
+            }
         }
-        if(gameArr[row+1][col+2].getType().equals("--") || gameArr[row+1][col+2].getColor().equals(otherColor)){
-            returnMap.put(row+1, col+2);
+        cRow = row + 1;
+        cCol = col + 2; 
+        if(cRow < 8 && cCol < 8){
+            if(gameArr[row+1][col+2].getType().equals("--") || gameArr[row+1][col+2].getColor().equals(otherColor)){
+                returnMap.put(row+1, col+2);
+            }
         }
-        if(gameArr[row+2][col+1].getType().equals("--") || gameArr[row+2][col+1].getColor().equals(otherColor)){
-            returnMap.put(row+2, col+1);
+        cRow = row + 2;
+        cCol = col + 1; 
+        if(cRow < 8 && cCol < 8){
+            if(gameArr[row+2][col+1].getType().equals("--") || gameArr[row+2][col+1].getColor().equals(otherColor)){
+                returnMap.put(row+2, col+1);
+            }
         }
-        if(gameArr[row+2][col-1].getType().equals("--") || gameArr[row+2][col-1].getColor().equals(otherColor)){
-            returnMap.put(row+2, col-1);
+        cRow = row + 2;
+        cCol = col - 1; 
+        if(cRow < 8 && cCol >= 0){
+            if(gameArr[row+2][col-1].getType().equals("--") || gameArr[row+2][col-1].getColor().equals(otherColor)){
+                returnMap.put(row+2, col-1);
+            }
         }
-        if(gameArr[row+1][col-2].getType().equals("--") || gameArr[row+1][col-2].getColor().equals(otherColor)){
-            returnMap.put(row+1, col-2);
+        cRow = row + 1;
+        cCol = col - 2; 
+        if(cRow < 8 && cCol >= 0){
+            if(gameArr[row+1][col-2].getType().equals("--") || gameArr[row+1][col-2].getColor().equals(otherColor)){
+                returnMap.put(row+1, col-2);
+            }
         }
-        if(gameArr[row-1][col-2].getType().equals("--") || gameArr[row-1][col-2].getColor().equals(otherColor)){
-            returnMap.put(row-1, col-2);
+        cRow = row - 1;
+        cCol = col - 2; 
+        if(cRow >= 0 && cCol >= 0){
+            if(gameArr[row-1][col-2].getType().equals("--") || gameArr[row-1][col-2].getColor().equals(otherColor)){
+                returnMap.put(row-1, col-2);
+            }
         }
 
 
