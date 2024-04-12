@@ -137,9 +137,9 @@ public class chessRunnable{
                      * valid color. This prevents errors when selecting blank squares
                      */
                     else if(isColorAndTurnCorrectWhite(gameArr, game)){                     
-                        makeChangesWhite(gameArr, game, window);
+                        makeChangesWhite(game, game, window);
                     } else if(isColorAndTurnCorrectBlack(gameArr, game)){
-                        makeChangesBlack(gameArr, game, window);
+                        makeChangesBlack(game, game, window);
                     } else if(gameArr[startY][startX].getColor() == null){
                         /*
                          * Game detection for a not picking a valid starting square
@@ -222,7 +222,7 @@ public class chessRunnable{
         return retArr;
     }
    
-    public static void makeChangesWhite(Piece[][] gameArr, gameBoard game, JFrame window){
+    public static void makeChangesWhite(gameBoard game, gameBoard game, JFrame window){
         if(gameLogic.returnValMove(gameArr, startY, startX, endY, endX)){    
             
             /**

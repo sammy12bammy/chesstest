@@ -341,12 +341,12 @@ public class gameBoard {
 
     public boolean pieceMovedAndNotinCheck(int row, int col, String color){
         Piece pieceToMove = game[row][col];
-        String otherColor;
-        if(color.equals("white")){
-            otherColor = "black";
-        } else {
-            otherColor = "white";
-        }
+        // String otherColor;
+        // if(color.equals("white")){
+        //     otherColor = "black";
+        // } else {
+        //     otherColor = "white";
+        // }
         //hashmap of possible moves
         HashMap<Integer, Integer> possibleMoves = checkmate.getMovesForPiece(pieceToMove, game);
 
@@ -357,9 +357,10 @@ public class gameBoard {
         for(Integer i : possibleMoves.keySet()) {
             //the key is the row, the value is the column
             if(i >= 0 && i < 8 && possibleMoves.get(i) >= 0 && possibleMoves.get(i) < 8){
+                System.out.println(pieceToMove.getType() + " is moving to " + i + "," + possibleMoves.get(i));
                 changePiece(pieceToMove, i, possibleMoves.get(i));
                 if(!gameLogic.colorInCheck(this, color)){
-                    System.out.println("Can move to: " + i +"," + possibleMoves.get(i));
+                    System.out.println("Move that prevents mate: " + i +"," + possibleMoves.get(i));
                     return true;
                 }
                 changePiece(pieceToMove, row, col);
