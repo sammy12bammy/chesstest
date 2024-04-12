@@ -650,10 +650,10 @@ public class checkmate {
                 spots.add(gameArr[rowCount][colCount]);
             } else if(gameArr[rowCount][colCount].getColor().equals(notPieceColor)){
                 spots.add(gameArr[rowCount][colCount]);
-                rowCount = 10;
+                rowCount = -10;
             } else {
                 //if its not
-                rowCount = 10;
+                rowCount = -10;
             }
             rowCount--;
             colCount--;

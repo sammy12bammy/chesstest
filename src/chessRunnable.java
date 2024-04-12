@@ -24,8 +24,8 @@ public class chessRunnable{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 800;
+    public static final int SCREEN_WIDTH = 700;
+    public static final int SCREEN_HEIGHT = 700;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
@@ -123,17 +123,13 @@ public class chessRunnable{
                     System.out.println(endX + " , " + endY);
 
                     Piece[][] gameArr = game.getGameBoardArray();
-                    
-                    if(game.getKingCheckedBlack() || game.getKingCheckedWhite()){
-                        System.out.println("You are not in mate!");
-                        /* 
+                     /* 
                             
                             write the stuff about moving the king and checking if the move prevents check here
 
 
-                        */
-
-                    } else if(gameLogic.castleDetection(gameArr, startX, startY, endX, endY)){
+                    */
+                    if(gameLogic.castleDetection(gameArr, startX, startY, endX, endY)){
                         visualCastleChanges(gameArr, game, window); 
                     }
                     /*
@@ -151,8 +147,7 @@ public class chessRunnable{
                          */
                         System.out.println(THERMINAL_TEXT_YELLOW + "select valid square" + THERMINAL_TEXT_RESET);
                     } else {
-                        //System message for not making a valid move
-                        System.out.println(THERMINAL_TEXT_RED + "Not a valid move" + THERMINAL_TEXT_RESET);
+                        System.out.println(THERMINAL_TEXT_RED + "Wrong color" + THERMINAL_TEXT_RESET);
                     }     
                     //resets mouse click
                     startX = -1;
@@ -200,8 +195,7 @@ public class chessRunnable{
              * Try case for uplaoding the image using Imgur. Will work as long as their is a stable wifi
              * connection and Imgur is still hosting the image
              */
-            BufferedImage allPieces = ImageIO.read(new File("chess.png"));
-            //allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));   
+            BufferedImage allPieces = ImageIO.read(new File("chess.png")); 
             for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                 for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
                     retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
@@ -212,9 +206,6 @@ public class chessRunnable{
         } catch (Exception MalformedURLException){
             System.out.println(THERMINAL_TEXT_RED + "Image of game pieces could not print due to a URL exception. Trying file" + THERMINAL_TEXT_RESET);
             try{
-                /*
-                 * Ran only when offline and the image in correct download folder
-                 */
                 BufferedImage allPieces = ImageIO.read(new URL("https://i.imgur.com/qr1ZYFe.png"));
                 for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                     for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
@@ -248,16 +239,6 @@ public class chessRunnable{
              * This is a back end change and will not affect how the game is displayed visually
              */
             game.makeMove(startY, startX, endY, endX);
-            //game.printGame(); 
-            /*                        
-            if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
-                game.setKingCheckedBlack(true);
-                System.out.println("King is checked");
-            } else {
-                System.out.println("King is not checked");
-            }
-            */
-
             if(gameLogic.colorInCheck(game, "black")){
                 game.setKingCheckedBlack(true);
                 System.out.println("King is checked");
@@ -266,6 +247,8 @@ public class chessRunnable{
                     //window.dispose();
                     //System.exit(0);
                     return;
+                } else {
+                    System.out.println("Not in checkmate");
                 }
             } else {
                 System.out.println("King is not checked");
@@ -299,6 +282,8 @@ public class chessRunnable{
                     //window.dispose();
                     //System.exit(0);
                     return;
+                } else {
+                    System.out.println("Not in checkmate");
                 }
             } else {
                 System.out.println("King is not checked");
