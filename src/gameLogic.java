@@ -10,7 +10,7 @@ public class gameLogic {
      * @param ecol
      * @return
      */
-    public static boolean returnValMove(Piece[][] grid, int srow, int scol, int erow, int ecol){
+    public static boolean returnValMove(gameBoard game, Piece[][] grid, int srow, int scol, int erow, int ecol){
         Piece sPiece = grid[srow][scol];
         Piece ePiece = grid[erow][ecol];
         if(sPiece == null){
@@ -23,41 +23,60 @@ public class gameLogic {
 
             //pawn movement      
             if(sPiece.getType().equals("pawn")){
-                return pawnMoveLogic(grid, srow, scol, erow, ecol);
-                
+                if(pawnMoveLogic(grid, srow, scol, erow, ecol)){
+                    gameBoard copy = checkmate.copyGameBoard(game);
+                    if(copy.pieceMovedAndNotinCheck(srow, scol, erow, ecol)){
+                        return true;
+                    }
+                }     
             }
             //knight
             if(sPiece.getType().equals("knight")){
-                return knightMoveLogic(srow, scol, erow, ecol);
+                if(knightMoveLogic(srow, scol, erow, ecol)){
+                    gameBoard copy = checkmate.copyGameBoard(game);
+                    if(copy.pieceMovedAndNotinCheck(srow, scol, erow, ecol)){
+                        return true;
+                    }
+                }
             }
             //bishop
             
-            if(sPiece.getType().equals("bishop")){                                        
+            if(sPiece.getType().equals("bishop")){                                                 
                 if(Math.abs(srow - erow) == Math.abs(scol - ecol) && checkDiag(grid, srow,scol,erow,ecol)){
-                    return true;
-                }           
+                    gameBoard copy = checkmate.copyGameBoard(game);
+                    if(copy.pieceMovedAndNotinCheck(srow, scol, erow, ecol)){
+                        return true;
+                    }
+                }  
             }
             //rook
             if(sPiece.getType().equals("rook")){
-                if(srow == erow || scol == ecol){
-                    if(checkRow(grid, srow,scol,erow,ecol)){
+                if((srow == erow || scol == ecol) && checkRow(grid, srow,scol,erow,ecol)){
+                    gameBoard copy = checkmate.copyGameBoard(game);
+                    if(copy.pieceMovedAndNotinCheck(srow, scol, erow, ecol)){
                         return true;
                     }
-                }           
+                }          
             }
             //queen
+
+
             if(sPiece.getType().equals("queen")){
-                if(Math.abs(srow - erow) == Math.abs(scol - ecol) && checkDiag(grid, srow,scol,erow,ecol)){
-                    return true;
-                } else if(srow == erow || scol == ecol){
-                    if(checkRow(grid, srow, scol, erow, ecol)){
+                if( (Math.abs(srow - erow) == Math.abs(scol - ecol) && checkDiag(grid, srow,scol,erow,ecol)) || ((srow == erow || scol == ecol) && checkRow(grid, srow, scol, erow, ecol))){
+                    gameBoard copy = checkmate.copyGameBoard(game);
+                    if(copy.pieceMovedAndNotinCheck(srow, scol, erow, ecol)){
                         return true;
                     }
                 }
             }      
             //king
             if(sPiece.getType().equals("king")){
-                return kingMoveLogic(grid, srow, scol, erow, ecol);
+                if(kingMoveLogic(grid, srow, scol, erow, ecol)){
+                    gameBoard copy = checkmate.copyGameBoard(game);
+                    if(copy.pieceMovedAndNotinCheck(srow, scol, erow, ecol)){
+                        return true;
+                    }
+                }
             }
 
             return false;

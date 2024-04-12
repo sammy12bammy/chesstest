@@ -137,9 +137,9 @@ public class chessRunnable{
                      * valid color. This prevents errors when selecting blank squares
                      */
                     else if(isColorAndTurnCorrectWhite(gameArr, game)){                     
-                        makeChangesWhite(game, game, window);
+                        makeChangesWhite(gameArr, game, window);
                     } else if(isColorAndTurnCorrectBlack(gameArr, game)){
-                        makeChangesBlack(game, game, window);
+                        makeChangesBlack(gameArr, game, window);
                     } else if(gameArr[startY][startX].getColor() == null){
                         /*
                          * Game detection for a not picking a valid starting square
@@ -222,9 +222,8 @@ public class chessRunnable{
         return retArr;
     }
    
-    public static void makeChangesWhite(gameBoard game, gameBoard game, JFrame window){
-        if(gameLogic.returnValMove(gameArr, startY, startX, endY, endX)){    
-            
+    public static void makeChangesWhite(Piece[][] gameArr, gameBoard game, JFrame window){
+        if(gameLogic.returnValMove(game, gameArr, startY, startX, endY, endX)){              
             /**
             * makes changes to the visual swing JFrame. Changes the X and Y of the pieces to 
             the respective spots where they belong. A x and y instance variable for the piece 
@@ -259,7 +258,7 @@ public class chessRunnable{
     }
 
     public static void makeChangesBlack(Piece[][] gameArr, gameBoard game, JFrame window){
-        if(gameLogic.returnValMove(gameArr, startY, startX, endY, endX)){
+        if(gameLogic.returnValMove(game, gameArr, startY, startX, endY, endX)){
             gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
             gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
             window.repaint();

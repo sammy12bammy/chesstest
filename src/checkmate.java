@@ -49,7 +49,7 @@ public class checkmate {
                 Piece piece = arr[row][col];
                 if (piece != null && piece.getColor() != null && piece.getColor().equals(color)) {
                     gameBoard copyGettingChecked = copyGameBoard(game);
-                    if(copyGettingChecked.pieceMovedAndNotinCheck(row, col, color)){
+                    if(copyGettingChecked.pieceMovedAndNotinCheckMate(row, col, color)){
                         System.out.println("Piece that can move is a: " + piece.getType() + " at " + piece.getRow() + "," + piece.getCol());
                         return true;
                     }

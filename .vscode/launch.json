@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "chessRunnable",
+            "request": "launch",
+            "mainClass": "chessRunnable",
+            "projectName": "chesstest-3_fb991e03"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

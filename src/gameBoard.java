@@ -339,7 +339,7 @@ public class gameBoard {
         game[row][col] = piece;
     }
 
-    public boolean pieceMovedAndNotinCheck(int row, int col, String color){
+    public boolean pieceMovedAndNotinCheckMate(int row, int col, String color){
         Piece pieceToMove = game[row][col];
         // String otherColor;
         // if(color.equals("white")){
@@ -368,6 +368,25 @@ public class gameBoard {
         }
 
         return false;
+    }
+
+    public boolean pieceMovedAndNotinCheck(int srow, int scol, int erow, int ecol){
+        Piece pieceToMove = game[srow][scol];
+        String color = pieceToMove.getColor();
+        String otherColor;
+        if(color.equals("white")){
+            otherColor = "black";
+        } else {
+            otherColor = "white";
+        }
+
+        changePiece(pieceToMove, erow, ecol);
+        if(gameLogic.colorInCheck(this, otherColor)){
+            changePiece(pieceToMove, srow, scol);
+            return false;
+        }
+        changePiece(pieceToMove, srow, scol);
+        return true;
     }
 
     
