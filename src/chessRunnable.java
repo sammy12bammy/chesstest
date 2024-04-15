@@ -24,8 +24,8 @@ public class chessRunnable{
      * 
      * @Precondition : WIDTH has to equal Height (Has to be a square)
      */
-    public static final int SCREEN_WIDTH = 700;
-    public static final int SCREEN_HEIGHT = 700;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 850;
 
     final static String THERMINAL_TEXT_RESET = "\u001B[0m";
     final static String THERMINAL_TEXT_RED = "\u001B[31m";
@@ -61,8 +61,9 @@ public class chessRunnable{
          * Visual game generation done through swing. Creation of chessboard using custom colors
          */
         JFrame window = new JFrame();
-        window.setSize(SCREEN_WIDTH,(int)(SCREEN_HEIGHT * 1.045));
-        window.setLocationRelativeTo(null);
+        window.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+        //window.setLocationRelativeTo(null);
+        window.setResizable(false);
         JPanel panel = new JPanel(){
             @Override
             public void paint(Graphics g){
@@ -75,7 +76,8 @@ public class chessRunnable{
                         } else {
                             g.setColor(new Color(119, 148, 85));
                         }
-                        g.fillRect(x*(SCREEN_WIDTH / 8),y*(SCREEN_HEIGHT / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8);
+                        g.fillRect(x*((SCREEN_WIDTH-15) / 8),y*((SCREEN_HEIGHT - 40) / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8);
+                        //g.fillRect(x*(SCREEN_WIDTH / 8),y*(SCREEN_HEIGHT / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8)
                         whiteSquare = !whiteSquare;
                     }
                     whiteSquare = !whiteSquare;                 
@@ -138,8 +140,14 @@ public class chessRunnable{
                      */
                     else if(isColorAndTurnCorrectWhite(gameArr, game)){                     
                         makeChangesWhite(gameArr, game, window);
+                        startX = -1;
+                        startY = -1;
+                        playerTurn(game);
                     } else if(isColorAndTurnCorrectBlack(gameArr, game)){
                         makeChangesBlack(gameArr, game, window);
+                        startX = -1;
+                        startY = -1;
+                        playerTurn(game);
                     } else if(gameArr[startY][startX].getColor() == null){
                         /*
                          * Game detection for a not picking a valid starting square
@@ -149,10 +157,7 @@ public class chessRunnable{
                     } else {
                         System.out.println(THERMINAL_TEXT_RED + "Wrong color" + THERMINAL_TEXT_RESET);
                     }     
-                    //resets mouse click
-                    startX = -1;
-                    startY = -1;
-                    playerTurn(game);
+                    // *old* resets mouse click here
                 }
             }
             
@@ -198,7 +203,7 @@ public class chessRunnable{
             BufferedImage allPieces = ImageIO.read(new File("chess.png")); 
             for(int y = 0; y < IMAGE_ALL_PIECES_HEIGHT; y += SUBIMAGE_SIZE){
                 for(int x = 0; x < IMAGE_ALL_PIECES_WIDTH; x += SUBIMAGE_SIZE){
-                    retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(SCREEN_WIDTH / 8,SCREEN_HEIGHT / 8, BufferedImage.SCALE_SMOOTH);
+                    retArr[img_index] = allPieces.getSubimage(x, y, SUBIMAGE_SIZE, SUBIMAGE_SIZE).getScaledInstance(100 , 100, BufferedImage.SCALE_SMOOTH);
                     img_index++;
                 }
             }
@@ -230,7 +235,7 @@ public class chessRunnable{
             class had to implemented because changing the row and col would not properly display
             a moment in the JFrame 
             */                
-            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
+            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT - 5);
             gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
             window.repaint();
             /**

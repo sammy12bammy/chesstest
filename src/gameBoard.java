@@ -381,11 +381,13 @@ public class gameBoard {
         }
 
         changePiece(pieceToMove, erow, ecol);
-        if(gameLogic.colorInCheck(this, otherColor)){
+        if(gameLogic.colorInCheck(this, color)){
+            System.out.println("This will result in check");
             changePiece(pieceToMove, srow, scol);
             return false;
         }
         changePiece(pieceToMove, srow, scol);
+        System.out.println("This willnot result in check");
         return true;
     }
 
