@@ -95,3 +95,6 @@ Checking for stalemate
         Can the king move?
         If no can a piece move? The piece moving could lead to check, therefore a staelemate
             
+
+
+Change x and y on piece and make a method to control JFrame in chess runable
