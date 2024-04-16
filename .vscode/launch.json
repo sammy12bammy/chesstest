@@ -9,6 +9,13 @@
             "name": "chessRunnable",
             "request": "launch",
             "mainClass": "chessRunnable",
+            "projectName": "chesstest_f8cd8b9d"
+        },
+        {
+            "type": "java",
+            "name": "chessRunnable",
+            "request": "launch",
+            "mainClass": "chessRunnable",
             "projectName": "chesstest_7d663506"
         },
         {

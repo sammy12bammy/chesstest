@@ -37,6 +37,7 @@ public class chessRunnable{
     private static int startY = -1;
     private static int endX = -1;
     private static int endY = -1;
+    private static Image imgs[] = getImgArray();
     public static void main(String[] args) throws Exception {
         //Sets up game in thermal and initalizes a gameBoard        
         clearThermialScreen();;
@@ -54,7 +55,6 @@ public class chessRunnable{
          * 
          * To see the index of pieces, see info.txt
          */
-        Image imgs[] = getImgArray();
         
 
         /**
@@ -62,46 +62,8 @@ public class chessRunnable{
          */
         JFrame window = new JFrame();
         window.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-        //window.setLocationRelativeTo(null);
         window.setResizable(false);
-        JPanel panel = new JPanel(){
-            @Override
-            public void paint(Graphics g){
-                super.paintComponent(g);
-                boolean whiteSquare = true;
-                for(int x = 0; x < 8; x++){
-                    for(int y = 0; y <8; y++){
-                        if(whiteSquare){
-                            g.setColor(new Color(235, 235, 208));                                                          
-                        } else {
-                            g.setColor(new Color(119, 148, 85));
-                        }
-                        g.fillRect(x*((SCREEN_WIDTH-15) / 8),y*((SCREEN_HEIGHT - 40) / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8);
-                        //g.fillRect(x*(SCREEN_WIDTH / 8),y*(SCREEN_HEIGHT / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8)
-                        whiteSquare = !whiteSquare;
-                    }
-                    whiteSquare = !whiteSquare;                 
-                }
-
-                /* 
-                * This displays the game on the JFrame
-                * Iterate through the game array in the gameBoard.java class
-                * IF there is a piece there, get the type at sets the index of that piece
-                * An index of 12 or greater represents no pieces being there or "--" this gets skipped over
-                */
-                
-                for(Piece[] row : game.getGameBoardArray()){
-                    for(Piece piece : row){
-                        int index = getImgIndex(piece);
-                        
-                        if(index < 12){
-                            g.drawImage(imgs[index], piece.getX(), piece.getY(), this);
-                        }       
-                    }
-                }          
-            }
-        };
-        window.add(panel);
+        paintBoard(game, window);
         window.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -117,7 +79,13 @@ public class chessRunnable{
                     startY = e.getY() / SECTION_DIVIDER_INT;
                     System.out.println("First Click");
                     System.out.println(startX + " , " + startY);
+
+                    //get possible moves
+                    //remove moves that lead to checkmate
                 } else {
+                    
+                    //if the endX and endY are moves in the array of possible moves. make move
+                    
                     //if second click
                     endX = e.getX() / SECTION_DIVIDER_INT;
                     endY = e.getY() / SECTION_DIVIDER_INT;
@@ -125,12 +93,6 @@ public class chessRunnable{
                     System.out.println(endX + " , " + endY);
 
                     Piece[][] gameArr = game.getGameBoardArray();
-                     /* 
-                            
-                            write the stuff about moving the king and checking if the move prevents check here
-
-
-                    */
                     if(gameLogic.castleDetection(gameArr, startX, startY, endX, endY)){
                         visualCastleChanges(gameArr, game, window); 
                     }
@@ -235,14 +197,12 @@ public class chessRunnable{
             class had to implemented because changing the row and col would not properly display
             a moment in the JFrame 
             */                
-            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT - 5);
-            gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
-            window.repaint();
             /**
              * Makes changes to the gameBoard class. This keeps track of the piece and their positions.
              * This is a back end change and will not affect how the game is displayed visually
              */
             game.makeMove(startY, startX, endY, endX);
+            paintBoard(game, window);
             if(gameLogic.colorInCheck(game, "black")){
                 game.setKingCheckedBlack(true);
                 System.out.println("King is checked");
@@ -264,20 +224,9 @@ public class chessRunnable{
 
     public static void makeChangesBlack(Piece[][] gameArr, gameBoard game, JFrame window){
         if(gameLogic.returnValMove(game, gameArr, startY, startX, endY, endX)){
-            gameArr[startY][startX].setX(endX * SECTION_DIVIDER_INT);
-            gameArr[startY][startX].setY(endY * SECTION_DIVIDER_INT);
-            window.repaint();
+
             game.makeMove(startY, startX, endY, endX);
-            //game.printGame();
-            //KING CHECK
-            /* 
-            if(gameLogic.pieceThatMovedIsCheckingKing(gameArr, "white", endY, endX)){
-                System.out.println("King is checked");
-                game.setKingCheckedWhite(true);
-            } else {
-                System.out.println("King is not checked");
-            }
-            */
+            paintBoard(game, window);
             if(gameLogic.colorInCheck(game, "white")){
                 game.setKingCheckedWhite(true);
                 System.out.println("King is checked");
@@ -381,6 +330,45 @@ public class chessRunnable{
             }
         }
         return null;
+    }
+
+    public static void paintBoard(gameBoard game, JFrame window){
+        JPanel panel = new JPanel(){
+            @Override
+            public void paint(Graphics g){
+                super.paintComponent(g);
+
+                boolean whiteSquare = true;
+                for(int x = 0; x < 8; x++){
+                    for(int y = 0; y <8; y++){
+                        if(whiteSquare){
+                            g.setColor(new Color(235, 235, 208));                                                          
+                        } else {
+                            g.setColor(new Color(119, 148, 85));
+                        }
+                        g.fillRect(x*((SCREEN_WIDTH-15) / 8),y*((SCREEN_HEIGHT - 40) / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8);
+                        //g.fillRect(x*(SCREEN_WIDTH / 8),y*(SCREEN_HEIGHT / 8), SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8)
+                        whiteSquare = !whiteSquare;
+                    }
+                    whiteSquare = !whiteSquare;                 
+                }
+
+                for(Piece[] row : game.getGameBoardArray()){
+                    for(Piece piece : row){
+                        int index = getImgIndex(piece);                      
+                        if(index < 12){
+                            g.drawImage(imgs[index], piece.getCol() * 98, piece.getRow() * 101, window);
+                        }       
+                    }
+                }
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0;)
+                }
+            }
+            };
+        window.add(panel);
+        window.repaint();
+
     }
     //clears consel screen
     public static void clearThermialScreen() {  
