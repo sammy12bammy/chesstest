@@ -1,1 +1,1 @@
-## This was a experimental project done by senior year of highschool. It is meant to be a Java based chess game with Swing for graphics. This code does not compile.
+## This was a experimental project done by senior year of highschool. It is meant to be a Java based chess game with Swing for graphics. I learned Java, Swing, and the basic of Git// Github through this projct
